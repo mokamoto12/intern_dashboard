@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ワンプッシュ登録</title>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/redmond/jquery-ui.css">
+  <script src="js/onePushAdd.js"></script>
+</head>
+<body>
+<h1>ワンプッシュ登録</h1>
+<form action="#">
+  <p><label for="title">タイトル</label></p>
+  <input type="text" id="title">
+  <p><label for="datepicker">締め切り</label></p>
+  <input type="text" id="datepicker">
+  <p><label for="description">説明</label></p>
+  <textarea id="description"></textarea>
+  <select id="board_box">
+  </select>
+  <select id="list_box">
+  </select>
+  <button>面接</button>
+  <button>ＥＳ</button>
+  <button>説明会</button>
+  <input type="button" id="add_btn" value="登録ボタン">
+</form>
+</body>
+</html>
