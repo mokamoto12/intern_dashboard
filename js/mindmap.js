@@ -20,10 +20,10 @@
           url = 'https://trello.com/1/boards/' + id + '/lists?key=' + api_key + '&token=' + api_token + '&fields=name';     // id : ボードid
           break;
         case 'getCardList':
-          url = 'https://trello.com/1/lists/' + id + '/cards?key=' + api_key + '&token=' + api_token + '&fields=name&fields=idList';      // id : リストid
+          url = 'https://trello.com/1/lists/' + id + '/cards?key=' + api_key + '&token=' + api_token + '&fields=name,idList';      // id : リストid
           break;
         case 'getAllCardList':
-          url = 'https://trello.com/1/boards/' + id + '/cards?key=' + api_key + '&token=' + api_token + '&fields=name&fields=idList';      // id : ボードid
+          url = 'https://trello.com/1/boards/' + id + '/cards?key=' + api_key + '&token=' + api_token + '&fields=name,idList';      // id : ボードid
           break;
       }
       return url;
