@@ -109,8 +109,6 @@
           objList['listId'] = this.idList;
           list.push(objList);
         });
-        console.log("getAllcardlist");
-        console.log(list);
         return list;
       }).fail(function () {
         alert('getAllCardList:失敗');
