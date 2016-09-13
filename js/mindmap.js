@@ -64,8 +64,9 @@
     /**
      * リスト一覧を取得し、オブジェクト配列で返す
      */
-    function getList(boardId) {
-      var list = [];
+    var getList = function (boardId) {
+      var list = [],
+        defer = $.Deferred();
       getAjax('getList', boardId).done(function (data) {
         $.each(data, function () {
           var objList = {};
@@ -73,17 +74,19 @@
           objList['name'] = this.name;
           list.push(objList);
         });
-        return list;
+        defer.resolve(list);
       }).fail(function () {
         alert('getList:失敗');
       });
-    }
+      return defer.promise(this);
+    };
 
     /**
      * 指定のリスト内のカードを取得し、オブジェクト配列で返す
      */
-    function getCardList(listId) {
-      var list = [];
+    var getCardList = function (listId) {
+      var list = [],
+        defer = $.Deferred();
       getAjax('getCardList', listId).done(function (data) {
         $.each(data, function () {
           var objList = {};
@@ -91,17 +94,19 @@
           objList['name'] = this.name;
           list.push(objList);
         });
-        return list;
+        defer.resolve(list);
       }).fail(function () {
         alert('getCardList:失敗');
       });
-    }
+      return defer.promise(this);
+    };
 
     /**
      * ボード内のカードを取得し、オブジェクト配列で返す
      */
-    function getAllCardList(boardId) {
-      var list = [];
+    var getAllCardList = function (boardId) {
+      var list = [],
+        defer = $.Deferred();
       getAjax('getAllCardList', boardId).done(function (data) {
         $.each(data, function () {
           var objList = {};
@@ -110,14 +115,24 @@
           objList['listId'] = this.idList;
           list.push(objList);
         });
-        return list;
+        defer.resolve(list);
       }).fail(function () {
         alert('getAllCardList:失敗');
       });
+      return defer.promise(this);
+    };
+
+    /**
+     * 取得した配列を整理しなおす
+     */
+    function sortCardList(cardList, Lists, listName) {
+      var listId = searchListsName(listName, Lists),
+        selectList = searchListsCard(cardList, listId);
+      return selectList;
     }
 
     /**
-     * 指定のリストにあるカード名と一致するリストIDを出力する
+     * 指定のカード名と一致するリストIDを出力する
      */
     function searchListsName(cardName, Lists) {
       var ListsId = '';
@@ -131,11 +146,40 @@
     }
 
     /**
+     * 指定のリストIDを持つカードを配列で出す
+     */
+    function searchListsCard(cardList, listId) {
+      var list = [];
+      $.each(cardList, function () {
+        if (this.idList === listId) {
+          var objList = {};
+          objList['id'] = this.id;
+          objList['name'] = this.name;
+          objList['child'] = '';
+          list.push(objList);
+        }
+      });
+      return list;
+
+    }
+
+    /**
      * カード名をhtml側に出力する
      */
     function addLiElements(cardName) {
       var element = '<li><a href="#">' + cardName + '</a></li>';
       $MindMap.append(element);
+    }
+
+    /**
+     * ボードidを読み取り後のメイン処理
+     */
+    function mainProcess(boardId) {
+      $.when(
+        getList(boardId),
+        getAllCardList(boardId)
+      ).done(function (boardId) {
+      });
     }
 
     /**
