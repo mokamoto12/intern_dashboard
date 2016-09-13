@@ -16,6 +16,9 @@
         case 'getBoardId':
           url = 'https://trello.com/1/members/me/boards?key=' + api_key + '&token=' + api_token + '&fields=name';
           break;
+        case 'getList':
+          url = 'https://trello.com/1/boards/' + boardId + '/lists?key=' + api_key + '&token=' + api_token + '&fields=name';
+          break;
       }
       return url;
     }
@@ -33,21 +36,36 @@
     }
 
     /**
-     * ボードのidを取得する
+     * ボードのidを取得し、idを返す
      */
     function getBoardId() {
       getAjax('getBoardId').done(function (data) {
         $.each(data, function () {
           if (this.name === test_name) {
             board_id = this.id;
-            return false;
+            getList(board_id);
           }
         });
-        return board_id;
       }).fail(function () {
         alert('getBoardId:失敗');
       });
     }
 
+    /**
+     * リスト一覧を取得し、オブジェクト配列で返す
+     */
+    function getList(boardId) {
+      var list ={};
+      getAjax('getList', boardId).done(function (data) {
+        $.each(data, function () {
+          list[this.id] = this.name;
+        });
+        return list;
+      }).fail(function () {
+        alert('getList:失敗');
+      });
+    }
+
+    getBoardId();
   });
 }(jQuery));
