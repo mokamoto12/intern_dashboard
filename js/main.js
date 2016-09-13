@@ -1,47 +1,115 @@
 $(function () {
-  $("#sortable_left").sortable({connectWith: '#sortable_right'});
-  $("#sortable_right").sortable({connectWith: '#sortable_left'});
+
+  var domStorage = new DomStorage('#widgets');
+  var storage = new WidgetStorage(localStorage, domStorage);
+  storage.updateStorage();
+  var leftDisplay = new WidgetDisplay('#sortable_left', storage);
+  var rightDisplay = new WidgetDisplay('#sortable_right', storage);
 
 
-  var widgetMaterial = new DomWidgetMaterial('#widgets');
-  var widgets = widgetMaterial.getAllMaterial().map(function(key, val){
-    return new Widget(val);
-  });
-  var widgetStore = new WidgetStore(widgets);
 
-  var storeHelper = new DomStoreHelper('#widgets');
-  var storage = new LocalStorageStorage(localStorage);
 
+
+  var selector = new Selector('#widgets', '#sortable_left', '#sortable_right');
+  var leftWidgetStorage = new WidgetStorage('left');
+  var rightWidgetStorage = new WidgetStorage('right');
+  var leftDisplay = new WidgetDisplay('#sortable_left', leftWidgetStorage);
+  var rightDisplay = new WidgetDisplay('#sortable_right', rightWidgetStorage);
+  var storeHelper = new StoreHelper('#widgets');
   var store = new WidgetStore(storeHelper);
-  var storage = new WidgetStorage(storageHelper);
-  store.setNewWidgets(store.getAllItem());
-  display_left.setItem(store.popItem());
-  display_left.showItems();
-  display_right.showItems();
 
-  var dashboard = new Dashboard(display_left, display_right);
-
-  var domWidget = new DomWidget(storage, '#widgets', '#sortable_left', '#sortable_right');
-  domWidget.setStorageItem(domWidget.getWidgets());
-  storage.registerWidget(domWidget.getNotRegisterWidgets());
-  domWidget.displayWidgets(storage);
-  var widgetObjs = domWidget.getWidgets().map(function (key, elm) {
-    return new Widget(elm.id);
+  store.dispatchWidget(leftDisplay);
+  leftDisplay.setItem(store.getDisplayItem('left'));
+  rightDisplay.setItem(store.getDisplayItem('right'));
+  store.getNewWidgets().forEach(function (val, key) {
+    if (leftDisplay.getAllItem().length > rightDisplay.getAllItem().length) {
+      rightDisplay.setItem(val);
+      return;
+    }
+    leftDisplay.setItem(val);
   });
 
-  domWidget.setDom();
-
-  widget.getNotRegisterWidgets().map(function (widgetElm) {
-    widget.registerWidget(widgetElm);
+  $("#sortable_left").sortable({
+    connectWith: '#sortable_right',
+    update: function (e, ui) {
+      if(rightDisplay.hasNewWidget()) {
+        rightDisplay.updateDisplay();
+        return;
+      }
+      leftDisplay.updateDisplay();
+    }
+  });
+  $("#sortable_right").sortable({
+    connectWith: '#sortable_left',
+    update: function (e, ui) {
+      if (leftDisplay.hasNewWidget()) {
+        rightDisplay.updateDisplay();
+      }
+    }
   });
 
-  var leftDisplay = new WidgetDisplay('#sortable_left');
-  var rightDisplay = new WidgetDisplay('#sortable_right');
-  var timer = new DomTimer(new Date(), '#time');
-  var Dashboard = new Dashboard(timer, leftDisplay, rightDisplay);
-  Dashboard.displayWidgets();
-  Dashboard.setTime();
+  leftDisplay.displayWidgets();
+  rightDisplay.displayWidgets();
+
+
 });
+
+
+
+var DomStorage = function (selector) {
+  this.selector = selector;
+};
+
+DomStorage.prototype.getAllItem = function () {
+  return $(this.selector + '>*').map(function (key, elm) {
+    return elm.id;
+  });
+};
+
+DomStorage.prototype.getElement = function (key) {
+  return $(this.selector + '>' + key);
+};
+
+
+
+var WidgetStorage = function (storage, domStorage) {
+  this.storage = storage;
+  this.leftRank = this.getMaxRank();
+};
+
+WidgetStorage.prototype.getAllItem = function () {
+  Object.keys(this.storage).map(function (i, key) {
+    return JSON.parse(this.storage.getItem(key));
+  });
+};
+
+WidgetStorage.prototype.hasItem = function (key) {
+  return this.storage.getItem(key) !== null;
+};
+
+WidgetStorage.prototype.getItem = function (key) {
+  return this.storage.getItem(key);
+};
+
+WidgetStorage.prototype.setItem = function (key, json) {
+  return this.storage.setItem(key, JSON.stringify(json));
+};
+
+WidgetStorage.prototype.getRank = function (key) {
+  if (this.storage.hasItem(key)) {
+    return this.storage.getItem(key).rank;
+  }
+  return null;
+};
+
+WidgetStorage.prototype.getCol = function (key) {
+  if (this.storage.hasItem(key)) {
+    return this.storage.getItem(key).col;
+  }
+  return null;
+};
+
+
 
 var DomWidget = function (storage, widgetStore, leftCol, rightCol) {
   this.storage = storage;
@@ -63,28 +131,6 @@ DomWidget.prototype.setWidgets = function (widgets) {
 
 DomWidget.prototype.setWidget = function (widget) {
 
-};
-
-
-
-var LocalStorageStorageHelper = function (storage) {
-  this.storage = storage;
-};
-
-var WidgetStorage = function (storage) {
-  this.storage = storage;
-};
-
-WidgetStorage.prototype.hasItem = function (key) {
-  return this.storage.getItem(key) !== null;
-};
-
-WidgetStorage.prototype.getItem = function (key) {
-  return JSON.parse(this.storage.getItem(key));
-};
-
-WidgetStorage.prototype.setItem = function (key, json) {
-  this.storage.setItem(key, JSON.stringify(json));
 };
 
 
@@ -175,4 +221,22 @@ Dashboard.prototype.displayWidgets = function () {
 
 Dashboard.prototype.setTime = function () {
   this.timer.setTime();
+};
+
+
+
+var WidgetDisplay = function (selector, storage) {
+  this.selector = selector;
+  this.storage = storage;
+};
+
+WidgetDisplay.prototype.saveWidgetId = function (widget) {
+  this.storage.setWidgets(widget);
+};
+
+WidgetDisplay.prototype.displayWidgets = function () {
+  var self = this;
+  self.storage.getAllItem().map(function (widget) {
+    $(self.selector).append(widget);
+  });
 };
