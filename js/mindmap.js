@@ -19,7 +19,7 @@
           url = 'https://trello.com/1/boards/' + id + '/lists?key=' + api_key + '&token=' + api_token + '&fields=name';     // id : ボードid
           break;
         case 'getCardList':
-          url = 'https://trello.com/1/lists/' + id + '/cards?key=' + api_key + '&token=' + api_token + '&fields=name';      // id : リストid
+          url = 'https://trello.com/1/boards/' + id + '/cards?key=' + api_key + '&token=' + api_token + '&fields=name&fields=idList';      // id : リストid
           break;
       }
       return url;
@@ -61,10 +61,13 @@
      * リスト一覧を取得し、オブジェクト配列で返す
      */
     function getList(boardId) {
-      var list = {};
+      var list = [];
       getAjax('getList', boardId).done(function (data) {
         $.each(data, function () {
-          list[this.id] = this.name;
+          var objList = {};
+          objList['id'] = this.id;
+          objList['name'] = this.name;
+          list.push(objList);
         });
         return list;
       }).fail(function () {
@@ -76,10 +79,14 @@
      * 指定のリスト内のカードを取得し、オブジェクト配列で返す
      */
     function getCardList(listId) {
-      var list = {};
+      var list = [];
       getAjax('getCardList', listId).done(function (data) {
         $.each(data, function () {
-          list[this.id] = this.name;
+          var objList = {};
+          objList['id'] = this.id;
+          objList['name'] = this.name;
+          objList['listId'] = this.idList;
+          list.push(objList);
         });
         return list;
       }).fail(function () {
