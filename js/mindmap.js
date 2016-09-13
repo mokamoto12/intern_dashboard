@@ -178,7 +178,7 @@
       $.when(
         getList(boardId),
         getAllCardList(boardId)
-      ).done(function (boardId) {
+      ).done(function (getList, cardList) {
       });
     }
 
@@ -188,7 +188,7 @@
     $.when(
       getBoardId(test_name)
     ).done(function (boardId) {
-      getList(boardId);
+      mainProcess(boardId);
     });
   });
 }(jQuery));
