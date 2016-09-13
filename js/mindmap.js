@@ -3,7 +3,8 @@
   $(function () {
     var api_key = '6934d38ef199df9d14099dbc119a7ea5',
       api_token = '23c94140fbbb78afa14b02259b2934c07d71b0b102fc0de68a09c5aaaf0c4ff8',
-      test_name = 'sandbox_mindmap';
+      test_name = 'sandbox_mindmap',
+      $MindMap = $('#MindMap');
 
 
     /**
@@ -127,6 +128,14 @@
         }
       });
       return ListsId;
+    }
+
+    /**
+     * カード名をhtml側に出力する
+     */
+    function addLiElements(cardName) {
+      var element = '<li><a href="#">' + cardName + '</a></li>';
+      $MindMap.append(element);
     }
 
     /**
