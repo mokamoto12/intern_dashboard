@@ -19,7 +19,10 @@
           url = 'https://trello.com/1/boards/' + id + '/lists?key=' + api_key + '&token=' + api_token + '&fields=name';     // id : ボードid
           break;
         case 'getCardList':
-          url = 'https://trello.com/1/boards/' + id + '/cards?key=' + api_key + '&token=' + api_token + '&fields=name&fields=idList';      // id : リストid
+          url = 'https://trello.com/1/lists/' + id + '/cards?key=' + api_key + '&token=' + api_token + '&fields=name&fields=idList';      // id : リストid
+          break;
+        case 'getAllCardList':
+          url = 'https://trello.com/1/boards/' + id + '/cards?key=' + api_key + '&token=' + api_token + '&fields=name&fields=idList';      // id : ボードid
           break;
       }
       return url;
@@ -85,12 +88,32 @@
           var objList = {};
           objList['id'] = this.id;
           objList['name'] = this.name;
-          objList['listId'] = this.idList;
           list.push(objList);
         });
         return list;
       }).fail(function () {
         alert('getCardList:失敗');
+      });
+    }
+
+    /**
+     * ボード内のカードを取得し、オブジェクト配列で返す
+     */
+    function getAllCardList(boardId) {
+      var list = [];
+      getAjax('getAllCardList', boardId).done(function (data) {
+        $.each(data, function () {
+          var objList = {};
+          objList['id'] = this.id;
+          objList['name'] = this.name;
+          objList['listId'] = this.idList;
+          list.push(objList);
+        });
+        console.log("getAllcardlist");
+        console.log(list);
+        return list;
+      }).fail(function () {
+        alert('getAllCardList:失敗');
       });
     }
 
