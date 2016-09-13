@@ -3,7 +3,6 @@
   $(function () {
     var api_key = '6934d38ef199df9d14099dbc119a7ea5',
       api_token = '23c94140fbbb78afa14b02259b2934c07d71b0b102fc0de68a09c5aaaf0c4ff8',
-      board_id = '',
       test_name = 'sandbox_mindmap';
 
 
@@ -38,24 +37,28 @@
     /**
      * ボードのidを取得し、idを返す
      */
-    function getBoardId() {
+    var getBoardId = function (name) {
+      var board_id = '',
+        defer = $.Deferred();
       getAjax('getBoardId').done(function (data) {
         $.each(data, function () {
-          if (this.name === test_name) {
+          if (this.name === name) {
             board_id = this.id;
-            getList(board_id);
+            return false; // break
           }
         });
+        defer.resolve(board_id);
       }).fail(function () {
         alert('getBoardId:失敗');
       });
-    }
+      return defer.promise(this);
+    };
 
     /**
      * リスト一覧を取得し、オブジェクト配列で返す
      */
     function getList(boardId) {
-      var list ={};
+      var list = {};
       getAjax('getList', boardId).done(function (data) {
         $.each(data, function () {
           list[this.id] = this.name;
@@ -66,6 +69,13 @@
       });
     }
 
-    getBoardId();
+    /**
+    * メイン処理
+    */
+    $.when(
+      getBoardId(test_name)
+    ).done(function (boardId) {
+      getList(boardId);
+    });
   });
 }(jQuery));
