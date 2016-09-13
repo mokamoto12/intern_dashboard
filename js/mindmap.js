@@ -116,6 +116,20 @@
     }
 
     /**
+     * 指定のリストにあるカード名と一致するリストIDを出力する
+     */
+    function searchListsName(cardName, Lists) {
+      var ListsId = '';
+      $.each(Lists, function () {
+        if (this.name === cardName) {
+          ListsId = this.id;
+          return false; // break
+        }
+      });
+      return ListsId;
+    }
+
+    /**
      * メイン処理
      */
     $.when(
