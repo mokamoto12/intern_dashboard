@@ -9,14 +9,15 @@
     /**
      * ajaxのURL生成
      */
-    function createUrl(mode, boardId) {
+    function createUrl(mode, id) {
       var url = '';
       switch (mode) {
         case 'getBoardId':
           url = 'https://trello.com/1/members/me/boards?key=' + api_key + '&token=' + api_token + '&fields=name';
           break;
         case 'getList':
-          url = 'https://trello.com/1/boards/' + boardId + '/lists?key=' + api_key + '&token=' + api_token + '&fields=name';
+          url = 'https://trello.com/1/boards/' + id + '/lists?key=' + api_key + '&token=' + api_token + '&fields=name';     // id : ボードid
+          break;
           break;
       }
       return url;
