@@ -18,6 +18,8 @@
         case 'getList':
           url = 'https://trello.com/1/boards/' + id + '/lists?key=' + api_key + '&token=' + api_token + '&fields=name';     // id : ボードid
           break;
+        case 'getCardList':
+          url = 'https://trello.com/1/lists/' + id + '/cards?key=' + api_key + '&token=' + api_token + '&fields=name';      // id : リストid
           break;
       }
       return url;
@@ -71,8 +73,23 @@
     }
 
     /**
-    * メイン処理
-    */
+     * 指定のリスト内のカードを取得し、オブジェクト配列で返す
+     */
+    function getCardList(listId) {
+      var list = {};
+      getAjax('getCardList', listId).done(function (data) {
+        $.each(data, function () {
+          list[this.id] = this.name;
+        });
+        return list;
+      }).fail(function () {
+        alert('getCardList:失敗');
+      });
+    }
+
+    /**
+     * メイン処理
+     */
     $.when(
       getBoardId(test_name)
     ).done(function (boardId) {
