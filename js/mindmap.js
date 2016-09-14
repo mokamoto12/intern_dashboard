@@ -4,6 +4,7 @@
     var api_key = '6934d38ef199df9d14099dbc119a7ea5',
       api_token = '23c94140fbbb78afa14b02259b2934c07d71b0b102fc0de68a09c5aaaf0c4ff8',
       test_name = 'sandbox_mindmap',
+      result = [],
       $MindMap = $('#MindMap');
 
 
@@ -161,6 +162,17 @@
     }
 
     /**
+     * リストごとにカードを分ける
+     */
+    function addChildren(lists, cards){
+      $.each(lists, function () {
+        var objList = {};
+        objList.name = this.name;
+        objList.children = searchListsCard(this.id, cards);
+        result.push(objList);
+      });
+    }
+    /**
      * カード名をhtml側に出力する
      */
     function addLiElements(cardName) {
@@ -169,23 +181,17 @@
     }
 
     /**
-     * ボードidを読み取り後のメイン処理
-     */
-    function mainProcess(boardId) {
-      $.when(
-        getList(boardId),
-        getAllCardList(boardId)
-      ).done(function (getList, cardList) {
-      });
-    }
-
-    /**
      * メイン処理
      */
     $.when(
       getBoardId(test_name)
     ).done(function (boardId) {
-      mainProcess(boardId);
+      $.when(
+        getList(boardId),
+        getAllCardList(boardId)
+      ).done(function (lists, cards) {
+        addChildren(lists, cards);
+      });
     });
   });
 }(jQuery));
