@@ -70,8 +70,8 @@
       getAjax('getList', boardId).done(function (data) {
         $.each(data, function () {
           var objList = {};
-          objList['id'] = this.id;
-          objList['name'] = this.name;
+          objList.id = this.id;
+          objList.name = this.name;
           list.push(objList);
         });
         defer.resolve(list);
@@ -90,8 +90,8 @@
       getAjax('getCardList', listId).done(function (data) {
         $.each(data, function () {
           var objList = {};
-          objList['id'] = this.id;
-          objList['name'] = this.name;
+          objList.id = this.id;
+          objList.name = this.name;
           list.push(objList);
         });
         defer.resolve(list);
@@ -110,9 +110,9 @@
       getAjax('getAllCardList', boardId).done(function (data) {
         $.each(data, function () {
           var objList = {};
-          objList['id'] = this.id;
-          objList['name'] = this.name;
-          objList['listId'] = this.idList;
+          objList.id = this.id;
+          objList.name = this.name;
+          objList.listId = this.idList;
           list.push(objList);
         });
         defer.resolve(list);
@@ -148,19 +148,16 @@
     /**
      * 指定のリストIDを持つカードを配列で出す
      */
-    function searchListsCard(cardList, listId) {
+    function searchListsCard(listId, cardList) {
       var list = [];
       $.each(cardList, function () {
-        if (this.idList === listId) {
+        if (this.listId === listId){
           var objList = {};
-          objList['id'] = this.id;
-          objList['name'] = this.name;
-          objList['child'] = '';
+          objList.name = this.name;
           list.push(objList);
         }
       });
       return list;
-
     }
 
     /**
