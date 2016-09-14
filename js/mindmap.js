@@ -20,7 +20,7 @@
           url = 'https://trello.com/1/boards/' + id + '/lists?key=' + api_key + '&token=' + api_token + '&fields=name';     // id : ボードid
           break;
         case 'getCardList':
-          url = 'https://trello.com/1/lists/' + id + '/cards?key=' + api_key + '&token=' + api_token + '&fields=name,idList';      // id : リストid
+          url = 'https://trello.com/1/lists/' + id + '/cards?key=' + api_key + '&token=' + api_token + '&fields=name';      // id : リストid
           break;
         case 'getAllCardList':
           url = 'https://trello.com/1/boards/' + id + '/cards?key=' + api_key + '&token=' + api_token + '&fields=name,idList';      // id : ボードid
@@ -32,11 +32,11 @@
     /**
      * GETのajax
      */
-    function getAjax(mode, boardId) {
+    function getAjax(mode, id) {
       var result = $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: createUrl(mode, boardId)
+        url: createUrl(mode, id)
       });
       return result;
     }
