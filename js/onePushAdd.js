@@ -63,9 +63,25 @@ $(function () {
     var jsonListId = $('#list_box option:selected').attr('id');
     alert('addします。tiele：' + title + "due：" + due + "desc：" + desc + "trello_api_key：" + trelloApiKey + "trello_api_token：" + trelloApiToken + "List_id：" + jsonListId);
 
-    //GASの関数をつかってカードを追加する※通常のhtmlからは呼べない。gasで作ったhtmlファイルからしか呼べないみたい・・・。
-    google.script.run.addCard(trelloApiKey, trelloApiToken, jsonListId, title, desc, due);
+    addCard(trelloApiKey, trelloApiToken, jsonListId, title, desc, due);
 
-  })
+  });
+
+  function addCard(trelloKey,trelloToken,json_list_id,title,desc,due){
+    var listId = json_list_id;
+    var url = 'https://api.trello.com/1/cards/?key=' + trelloKey + '&token=' + trelloToken;
+    var options = {
+      'method' : 'post',
+      'muteHttpExceptions' : true,
+      'payload' : {
+        'name'      : title,
+        'desc'      : desc,
+        'due'       : due,
+        'idList'    : listId,
+        'urlSource' : ''
+      }
+    };
+    $.post(url, options.payload);
+  }
 
 });
