@@ -5,26 +5,23 @@ $(function () {
   $("#datepicker").datepicker("option", "buttonImageOnly", true);
   $("#datepicker").datepicker("option", "buttonImage", 'ico_calendar.png');
 
-  var trello_api_key = "dca0005de0d4861551bde47e1246b4d0";
-  var trello_api_token = "ae910fa0a066cafd5e15c5a78fa8442416a2b1db191f11c787e8836a7ebbc6e8";
-  var trello_username = "user09300969";
-  var title = $('#title').val();
-  var day = $('#datepicker').val();
-  var desc = $('#description').val();
+  var trelloApiKey = "dca0005de0d4861551bde47e1246b4d0";
+  var trelloApiToken = "ae910fa0a066cafd5e15c5a78fa8442416a2b1db191f11c787e8836a7ebbc6e8";
+  var trelloUsername = "user09300969";
 
   //ボード名を取得。
   $.ajax({
 
     type: "GET",
     dataType: "jsonp",
-    url: "https://trello.com/1/members/" + trello_username + "/boards?key=" + trello_api_key + "&token=" + trello_api_token + "&fields=name",
+    url: "https://trello.com/1/members/" + trelloUsername + "/boards?key=" + trelloApiKey + "&token=" + trelloApiToken + "&fields=name",
 
   }).done(function (data) {
 
     alert(data[0].name);
-    var arr_board = {};
+    var arrBoard = {};
     for (var i = 0; i < data.length; i++) {
-      arr_board[data[i].id] = data[i].name;
+      arrBoard[data[i].id] = data[i].name;
       $('#board_box').append('<option id="' + data[i].id + '">' + data[i].name + '</option>');
     }
 
@@ -32,24 +29,18 @@ $(function () {
     $('#board_box').on('change',
 
         function () {
-          alert('cahnge');
+          alert('change');
           $('#list_box').empty();
           $.ajax({
             type: "GET",
             dataType: "jsonp",
-            url: "https://trello.com/1/boards/" + $('#board_box option:selected').attr('id') + "/lists?key=" + trello_api_key + "&token=" + trello_api_token + "&fields=name",
-          }).done(function (list) {
-            alert(list[0].name);
-            var arr_list = {};
-            for (var i = 0; i < list.length; i++) {
-              arr_list[list[i].id] = list[i].name;
-              $('#list_box').append('<option id="' + list[i].id + '">' + list[i].name + '</option>');
+            url: "https://trello.com/1/boards/" + $('#board_box option:selected').attr('id') + "/lists?key=" + trelloApiKey + "&token=" + trelloApiToken + "&fields=name",
+          }).done(function (data) {
+            var arrList = {};
+            for (var i = 0; i < data.length; i++) {
+              arrList[data[i].id] = data[i].name;
+              $('#list_box').append('<option id="' + data[i].id + '">' + data[i].name + '</option>');
             }
-
-            var board = $('#board_box option:selected').attr('id');
-            var list = $('#list_box option:selected').attr('id');
-            var url = "https://trello.com/1/lists/" + list + "/cards?key=" + trello_api_key + "&token=" + trello_api_token + "&name=" + title + "&due=null";
-            $('form').attr('action', url);
 
           }).fail(function () {
             alert('list error');
@@ -62,17 +53,19 @@ $(function () {
 
   });
 
-  //新しいカードをpost
-  /*$('#add_btn').on('click', function(){
+  //新しいTrelloカードを追加
+  $('#add_btn').on('click', function () {
+    var trelloApiKey = "dca0005de0d4861551bde47e1246b4d0";
+    var trelloApiToken = "ae910fa0a066cafd5e15c5a78fa8442416a2b1db191f11c787e8836a7ebbc6e8";
+    var title = $('#title').val();
+    var desc = $('#description').val();
+    var due = $('#datepicker').val();
+    var jsonListId = $('#list_box option:selected').attr('id');
+    alert('addします。tiele：' + title + "due：" + due + "desc：" + desc + "trello_api_key：" + trelloApiKey + "trello_api_token：" + trelloApiToken + "List_id：" + jsonListId);
 
+    //GASの関数をつかってカードを追加する※通常のhtmlからは呼べない。gasで作ったhtmlファイルからしか呼べないみたい・・・。
+    google.script.run.addCard(trelloApiKey, trelloApiToken, jsonListId, title, desc, due);
 
-   post_trello(title,day,desc,board,list)
-
-   function post_trello(title,day,desc,board,list){
-   var post_url = "https://trello.com/1/cards?key"+trello_api_key+"&token="+trello_api_token+"&idList="+$('#list_box option:selected').attr('id')+
-   "&name="+title+"&idBoard="+board+"&idList="+list+"&description="+desc;
-
-   }
-   })*/
+  })
 
 });
