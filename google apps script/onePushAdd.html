@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ワンプッシュ登録</title>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/redmond/jquery-ui.css">
+  <script>
+    $(function () {
+      //カレンダーで日付登録
+      $("#datepicker").datepicker();
+      $("#datepicker").datepicker("option", "showOn", 'button');
+      $("#datepicker").datepicker("option", "buttonImageOnly", true);
+      $("#datepicker").datepicker("option", "buttonImage", 'ico_calendar.png');
+
+      var trello_api_key = "dca0005de0d4861551bde47e1246b4d0";
+      var trello_api_token = "ae910fa0a066cafd5e15c5a78fa8442416a2b1db191f11c787e8836a7ebbc6e8";
+      var trello_username = "user09300969";
+      var title = $('#title').val();
+      var day = $('#datepicker').val();
+      var desc = $('#description').val();
+
+      //ボード名を取得。
+      $.ajax({
+
+        type: "GET",
+        dataType: "jsonp",
+        url: "https://trello.com/1/members/" + trello_username + "/boards?key=" + trello_api_key + "&token=" + trello_api_token + "&fields=name",
+
+      }).done(function (data) {
+
+        console.log(data[0].name);
+        var arr_board = {};
+        for (var i = 0; i < data.length; i++) {
+          arr_board[data[i].id] = data[i].name;
+          $('#board_box').append('<option id="' + data[i].id + '">' + data[i].name + '</option>');
+        }
+
+        //ボード名が選ばれたらリスト名を取得
+        $('#board_box').on('change',
+
+                function () {
+                  console.log('change');
+                  $('#list_box').empty();
+                  $.ajax({
+                    type: "GET",
+                    dataType: "jsonp",
+                    url: "https://trello.com/1/boards/" + $('#board_box option:selected').attr('id') + "/lists?key=" + trello_api_key + "&token=" + trello_api_token + "&fields=name",
+                  }).done(function (list) {
+                    console.log(list[0].name);
+                    var arr_list = {};
+                    for (var i = 0; i < list.length; i++) {
+                      arr_list[list[i].id] = list[i].name;
+                      $('#list_box').append('<option id="' + list[i].id + '">' + list[i].name + '</option>');
+                    }
+
+                    //var board = $('#board_box option:selected').attr('id');
+                    $('#board_box option:selected').attr('name','selected_board_id');
+                    //var list = $('#list_box option:selected').attr('id');
+                    //var url = "https://trello.com/1/lists/" + list + "/cards?key=" + trello_api_key + "&token=" + trello_api_token + "&name=" + title + "&due=null";
+                    //$('form').attr('action', url);
+
+                  }).fail(function () {
+                    console.log('list error');
+                  });
+
+                });
+      }).fail(function () {
+
+        console.log('board error');
+
+      });
+
+      $('#add_btn').on('click', function(){
+        var trello_api_key = "dca0005de0d4861551bde47e1246b4d0";
+        var trello_api_token = "ae910fa0a066cafd5e15c5a78fa8442416a2b1db191f11c787e8836a7ebbc6e8";
+        var title = $('#title').val();
+        var desc = $('#description').val();
+        var due = $('#datepicker').val();
+        var json_list_id = $('#list_box option:selected').attr('id');
+        alert('addします.tiele'+title+"due"+due+"desc"+desc+"trello_api_kay"+trello_api_key+"list_id"+trello_api_token+json_list_id);
+
+        google.script.run.addCard(trello_api_key,trello_api_token,json_list_id,title,desc,due);
+
+      });
+
+      $('#es').on('click', function(){
+        var trello_api_key = "dca0005de0d4861551bde47e1246b4d0";
+        var trello_api_token = "ae910fa0a066cafd5e15c5a78fa8442416a2b1db191f11c787e8836a7ebbc6e8";
+        var title = "【ES提出】"+$('#title').val();
+        var desc = $('#description').val();
+        var due = $('#datepicker').val();
+        var json_list_id = $('#list_box option:selected').attr('id');
+        alert('addします.tiele'+title+"due"+due+"desc"+desc+"trello_api_kay"+trello_api_key+"list_id"+trello_api_token+json_list_id);
+
+        google.script.run.addCard(trello_api_key,trello_api_token,json_list_id,title,desc,due);
+
+      });
+
+      $('#mensetsu').on('click', function(){
+        var trello_api_key = "dca0005de0d4861551bde47e1246b4d0";
+        var trello_api_token = "ae910fa0a066cafd5e15c5a78fa8442416a2b1db191f11c787e8836a7ebbc6e8";
+        var title = "【面接】"+$('#title').val();
+        var desc = $('#description').val();
+        var due = $('#datepicker').val();
+        var json_list_id = $('#list_box option:selected').attr('id');
+        alert('addします.tiele'+title+"due"+due+"desc"+desc+"trello_api_kay"+trello_api_key+"list_id"+trello_api_token+json_list_id);
+
+        google.script.run.addCard(trello_api_key,trello_api_token,json_list_id,title,desc,due);
+
+      });
+
+    });
+  </script>
+</head>
+<body>
+<h1>ワンプッシュ登録</h1>
+<form>
+  <p><label for="title">タイトル</label></p>
+  <input type="text" id="title" name="title">
+  <p><label for="datepicker">締め切り</label></p>
+  <input type="text" id="datepicker" name="due">
+  <p><label for="description">説明</label></p>
+  <textarea id="description" name="disc"></textarea>
+  <select id="board_box">
+  </select>
+  <select id="list_box">
+  </select>
+  <button id="mensetsu">面接</button>
+  <button id="es">ＥＳ</button>
+  <button id="add_btn">登録ボタン</button>
+</form>
+</body>
+</html>
