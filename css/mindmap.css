@@ -21,3 +21,7 @@ h2 {
 .js-mindmap-active a.node.activeparent {
   color: #dbdd8d;
 }
+
+svg {
+  z-index: -1;
+}

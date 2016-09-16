@@ -12,6 +12,7 @@
         mindMap.displayMindMap(mindMapData);
       });
     });
+    mindMap.addAddNodeFunction('add_node');
   });
 
   var MindMap = function (mindMapDom) {
@@ -30,6 +31,10 @@
 
   MindMap.prototype.displayMindMap = function (data) {
     this.mindMapDom.displayMindMap(data);
+  };
+
+  MindMap.prototype.addAddNodeFunction = function (elmId) {
+    this.mindMapDom.addAddNodeFunction(elmId);
   };
 
 
@@ -119,5 +124,15 @@
     }, this);
     $li.append(appendElm);
     return $('<ul>').append($li);
+  };
+
+  MindMapDom.prototype.addAddNodeFunction = function (textId, buttonId) {
+    this.addElement($('<input id="' + textId + '" type="text">'));
+    this.addElement($('<button id="' + buttonId + '">ノードを追加</button>'));
+    this.addEvent();
+  };
+
+  MindMapDom.prototype.addElement = function (elm) {
+    $(this.selector).append(elm);
   };
 }(jQuery));
