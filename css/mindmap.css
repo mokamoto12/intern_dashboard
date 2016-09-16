@@ -1,0 +1,23 @@
+body {
+  background-color: #003258;
+}
+
+h2 {
+  color: #dddddd;
+}
+
+.js-mindmap-active a.node {
+  color: #ee7d82;
+  border: solid 1px #fff;
+  border-radius: 5px;
+  background-color: rgba(30,30,30,0.5);
+  padding: 5px 10px;
+}
+
+.js-mindmap-active a.node.active {
+  color: #eeeeee;
+}
+
+.js-mindmap-active a.node.activeparent {
+  color: #dbdd8d;
+}

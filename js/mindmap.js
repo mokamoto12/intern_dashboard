@@ -1,197 +1,123 @@
 (function ($) {
   'use strict';
   $(function () {
-    var api_key = '6934d38ef199df9d14099dbc119a7ea5',
-      api_token = '23c94140fbbb78afa14b02259b2934c07d71b0b102fc0de68a09c5aaaf0c4ff8',
-      test_name = 'sandbox_mindmap',
-      result = [],
-      $MindMap = $('#MindMap');
-
-
-    /**
-     * ajaxのURL生成
-     */
-    function createUrl(mode, id) {
-      var url = '';
-      switch (mode) {
-        case 'getBoardId':
-          url = 'https://trello.com/1/members/me/boards?key=' + api_key + '&token=' + api_token + '&fields=name';
-          break;
-        case 'getList':
-          url = 'https://trello.com/1/boards/' + id + '/lists?key=' + api_key + '&token=' + api_token + '&fields=name';     // id : ボードid
-          break;
-        case 'getCardList':
-          url = 'https://trello.com/1/lists/' + id + '/cards?key=' + api_key + '&token=' + api_token + '&fields=name';      // id : リストid
-          break;
-        case 'getAllCardList':
-          url = 'https://trello.com/1/boards/' + id + '/cards?key=' + api_key + '&token=' + api_token + '&fields=name,idList';      // id : ボードid
-          break;
-      }
-      return url;
-    }
-
-    /**
-     * GETのajax
-     */
-    function getAjax(mode, id) {
-      var result = $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: createUrl(mode, id)
-      });
-      return result;
-    }
-
-    /**
-     * ボードのidを取得し、idを返す
-     */
-    var getBoardId = function (name) {
-      var board_id = '',
-        defer = $.Deferred();
-      getAjax('getBoardId').done(function (data) {
-        $.each(data, function () {
-          if (this.name === name) {
-            board_id = this.id;
-            return false; // break
-          }
-        });
-        defer.resolve(board_id);
-      }).fail(function () {
-        alert('getBoardId:失敗');
-      });
-      return defer.promise(this);
-    };
-
-    /**
-     * リスト一覧を取得し、オブジェクト配列で返す
-     */
-    var getList = function (boardId) {
-      var list = [],
-        defer = $.Deferred();
-      getAjax('getList', boardId).done(function (data) {
-        $.each(data, function () {
-          var objList = {};
-          objList.id = this.id;
-          objList.name = this.name;
-          list.push(objList);
-        });
-        defer.resolve(list);
-      }).fail(function () {
-        alert('getList:失敗');
-      });
-      return defer.promise(this);
-    };
-
-    /**
-     * 指定のリスト内のカードを取得し、オブジェクト配列で返す
-     */
-    var getCardList = function (listId) {
-      var list = [],
-        defer = $.Deferred();
-      getAjax('getCardList', listId).done(function (data) {
-        $.each(data, function () {
-          var objList = {};
-          objList.id = this.id;
-          objList.name = this.name;
-          list.push(objList);
-        });
-        defer.resolve(list);
-      }).fail(function () {
-        alert('getCardList:失敗');
-      });
-      return defer.promise(this);
-    };
-
-    /**
-     * ボード内のカードを取得し、オブジェクト配列で返す
-     */
-    var getAllCardList = function (boardId) {
-      var list = [],
-        defer = $.Deferred();
-      getAjax('getAllCardList', boardId).done(function (data) {
-        $.each(data, function () {
-          var objList = {};
-          objList.id = this.id;
-          objList.name = this.name;
-          objList.listId = this.idList;
-          list.push(objList);
-        });
-        defer.resolve(list);
-      }).fail(function () {
-        alert('getAllCardList:失敗');
-      });
-      return defer.promise(this);
-    };
-
-    /**
-     * 取得した配列を整理しなおす
-     */
-    function sortCardList(cardList, Lists, listName) {
-      var listId = searchListsName(listName, Lists),
-        selectList = searchListsCard(cardList, listId);
-      return selectList;
-    }
-
-    /**
-     * 指定のカード名と一致するリストIDを出力する
-     */
-    function searchListsName(cardName, Lists) {
-      var ListsId = '';
-      $.each(Lists, function () {
-        if (this.name === cardName) {
-          ListsId = this.id;
-          return false; // break
-        }
-      });
-      return ListsId;
-    }
-
-    /**
-     * 指定のリストIDを持つカードを配列で出す
-     */
-    function searchListsCard(listId, cardList) {
-      var list = [];
-      $.each(cardList, function () {
-        if (this.listId === listId){
-          var objList = {};
-          objList.name = this.name;
-          list.push(objList);
-        }
-      });
-      return list;
-    }
-
-    /**
-     * リストごとにカードを分ける
-     */
-    function addChildren(lists, cards){
-      $.each(lists, function () {
-        var objList = {};
-        objList.name = this.name;
-        objList.children = searchListsCard(this.id, cards);
-        result.push(objList);
-      });
-    }
-    /**
-     * カード名をhtml側に出力する
-     */
-    function addLiElements(cardName) {
-      var element = '<li><a href="#">' + cardName + '</a></li>';
-      $MindMap.append(element);
-    }
-
-    /**
-     * メイン処理
-     */
-    $.when(
-      getBoardId(test_name)
-    ).done(function (boardId) {
-      $.when(
-        getList(boardId),
-        getAllCardList(boardId)
-      ).done(function (lists, cards) {
-        addChildren(lists, cards);
+    var apiKey = '6934d38ef199df9d14099dbc119a7ea5';
+    var apiToken = '28495b56169afac766d6ad94abf619d441c867b588d63a3a17111782b325d87b';
+    var trelloClient = new TrelloClient(apiKey, apiToken, 'sandbox_mindmap');
+    var mindMapDom = new MindMapDom('body');
+    var mindMap = new MindMap(mindMapDom);
+    trelloClient.fetchBoards().done(function (json) {
+      trelloClient.fetchLists(trelloClient.findBoard(json).id).done(function (lists) {
+        var mindMapData = mindMap.buildMindMapData(lists, 'マインドマップ');
+        mindMap.displayMindMap(mindMapData);
       });
     });
   });
+
+  var MindMap = function (mindMapDom) {
+    this.mindMapDom = mindMapDom;
+  };
+
+  MindMap.prototype.buildMindMapData = function (lists, name) {
+    var retObj = {name: name};
+    retObj.child = lists.find(function (listObj) {
+      return listObj.name === name;
+    }, this).cards.map(function (cardObj) {
+      return this.buildMindMapData(lists, cardObj.name);
+    }, this);
+    return retObj;
+  };
+
+  MindMap.prototype.displayMindMap = function (data) {
+    this.mindMapDom.displayMindMap(data);
+  };
+
+
+
+  var TrelloClient = function (apiKey, apiToken, boardName) {
+    var self = this;
+    this.baseUrl = 'https://trello.com/1/';
+    this.baseParam = {key:apiKey, token:apiToken};
+    this.boardName = boardName;
+  };
+
+  TrelloClient.prototype.fetchBoards = function () {
+    return $.getJSON(this.baseUrl + 'members/me/boards', Object.assign({}, this.baseParam, {fields: 'name'}))
+  };
+
+  TrelloClient.prototype.findBoard = function (json) {
+    var self = this;
+    return json.find(function (obj) {
+      return obj.name === self.boardName;
+    });
+  };
+
+  TrelloClient.prototype.fetchLists = function (boardId) {
+    return $.getJSON(this.baseUrl + 'boards/' + boardId + '/lists', Object.assign({}, this.baseParam, {cards: 'open'}))
+  };
+
+
+
+
+  var MindMapDom = function (selector) {
+    this.selector = selector;
+  };
+
+  MindMapDom.prototype.displayMindMap = function (data) {
+    var self = this;
+    self.addMindMapElement(data);
+    $(self.selector).mindmap({
+      showSublines: true,
+      canvasError: "alert",
+      mapArea: {x:-1, y:-1}
+    });
+
+    // add the data to the mindmap
+    var root = $(self.selector + '>ul>li').get(0).mynode = $(self.selector).addRootNode($(self.selector + '>ul>li>a').text(), {
+      href:'/',
+      url:'/',
+      onclick:function(node) {
+        $(node.obj.activeNode.content).each(function() {
+          this.hide();
+        });
+      }
+    });
+    $(self.selector + '>ul>li').hide();
+    var addLI = function() {
+      var parentnode = $(this).parents('li').get(0);
+      if (typeof(parentnode)=='undefined') parentnode=root;
+      else parentnode=parentnode.mynode;
+
+      this.mynode = $(self.selector).addNode(parentnode, $('a:eq(0)',this).text(), {
+//          href:$('a:eq(0)',this).text().toLowerCase(),
+        href:$('a:eq(0)',this).attr('href'),
+        onclick:function(node) {
+          $(node.obj.activeNode.content).each(function() {
+            this.hide();
+          });
+          $(node.content).each(function() {
+            this.show();
+          });
+        }
+      });
+      $(this).hide();
+      $('>ul>li', this).each(addLI);
+    };
+    $(self.selector + '>ul>li>ul').each(function() {
+      $('>li', this).each(addLI);
+    });
+  };
+
+  MindMapDom.prototype.addMindMapElement = function (data) {
+    $(this.selector).append(this.createElement(data));
+  };
+
+  MindMapDom.prototype.createElement = function (data) {
+    var $li = $('<li>').append('<a href="#">' + data.name + '</a>');
+    var appendElm = data.child.map(function (d) {
+      return this.createElement(d);
+    }, this);
+    $li.append(appendElm);
+    return $('<ul>').append($li);
+  };
 }(jQuery));
