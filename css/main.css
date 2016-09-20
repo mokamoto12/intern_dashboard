@@ -48,3 +48,14 @@ body {
   margin-right: 50px;
 }
 
+
+.mind_map__node {
+  display: block;
+  background-color: #eee;
+  margin: 10px;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 50px;
+  text-decoration: none;
+  color: inherit;
+}
