@@ -1,87 +1,22 @@
 $(function () {
   //カレンダーで日付登録
-  $("#datepicker").datepicker();
-  $("#datepicker").datepicker("option", "showOn", 'button');
-  $("#datepicker").datepicker("option", "buttonImageOnly", true);
-  $("#datepicker").datepicker("option", "buttonImage", 'ico_calendar.png');
+  $('#one_push_due').datepicker();
 
-  var trelloApiKey = "dca0005de0d4861551bde47e1246b4d0";
-  var trelloApiToken = "ae910fa0a066cafd5e15c5a78fa8442416a2b1db191f11c787e8836a7ebbc6e8";
-  var trelloUsername = "user09300969";
-
-  //ボード名を取得。
-  $.ajax({
-
-    type: "GET",
-    dataType: "jsonp",
-    url: "https://trello.com/1/members/" + trelloUsername + "/boards?key=" + trelloApiKey + "&token=" + trelloApiToken + "&fields=name",
-
-  }).done(function (data) {
-
-    alert(data[0].name);
-    var arrBoard = {};
-    for (var i = 0; i < data.length; i++) {
-      arrBoard[data[i].id] = data[i].name;
-      $('#board_box').append('<option id="' + data[i].id + '">' + data[i].name + '</option>');
-    }
-
-    //ボード名が選ばれたらリスト名を取得
-    $('#board_box').on('change',
-
-        function () {
-          alert('change');
-          $('#list_box').empty();
-          $.ajax({
-            type: "GET",
-            dataType: "jsonp",
-            url: "https://trello.com/1/boards/" + $('#board_box option:selected').attr('id') + "/lists?key=" + trelloApiKey + "&token=" + trelloApiToken + "&fields=name",
-          }).done(function (data) {
-            var arrList = {};
-            for (var i = 0; i < data.length; i++) {
-              arrList[data[i].id] = data[i].name;
-              $('#list_box').append('<option id="' + data[i].id + '">' + data[i].name + '</option>');
-            }
-
-          }).fail(function () {
-            alert('list error');
-          });
-
-        });
-  }).fail(function () {
-
-    alert('board error');
-
+  var apiKey = 'dca0005de0d4861551bde47e1246b4d0';
+  var apiToken = 'ae910fa0a066cafd5e15c5a78fa8442416a2b1db191f11c787e8836a7ebbc6e8';
+  var trelloUsername = 'me';
+  var trelloClient = new TrelloClient(apiKey, apiToken, 'Trello連携テスト');
+  trelloClient.fetchLists().done(function (lists) {
+    lists.map(function (list) {
+      $('#one_push_list_box').append('<option id="' + list.id + '">' + list.name + '</option>');
+    });
   });
 
   //新しいTrelloカードを追加
-  $('#add_btn').on('click', function () {
-    var trelloApiKey = "dca0005de0d4861551bde47e1246b4d0";
-    var trelloApiToken = "ae910fa0a066cafd5e15c5a78fa8442416a2b1db191f11c787e8836a7ebbc6e8";
-    var title = $('#title').val();
-    var desc = $('#description').val();
-    var due = $('#datepicker').val();
-    var jsonListId = $('#list_box option:selected').attr('id');
-    alert('addします。tiele：' + title + "due：" + due + "desc：" + desc + "trello_api_key：" + trelloApiKey + "trello_api_token：" + trelloApiToken + "List_id：" + jsonListId);
-
-    addCard(trelloApiKey, trelloApiToken, jsonListId, title, desc, due);
-
+  $('#one_push_submit').on('click', function () {
+    trelloClient.postCard($('#one_push_list_box>option:selected').attr('id'), $('#one_push_title').val(), {
+      desc: $('#one_push_desc').val(),
+      due: $('#one_push_due').val()
+    })
   });
-
-  function addCard(trelloKey,trelloToken,json_list_id,title,desc,due){
-    var listId = json_list_id;
-    var url = 'https://api.trello.com/1/cards/?key=' + trelloKey + '&token=' + trelloToken;
-    var options = {
-      'method' : 'post',
-      'muteHttpExceptions' : true,
-      'payload' : {
-        'name'      : title,
-        'desc'      : desc,
-        'due'       : due,
-        'idList'    : listId,
-        'urlSource' : ''
-      }
-    };
-    $.post(url, options.payload);
-  }
-
 });
