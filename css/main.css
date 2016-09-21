@@ -60,6 +60,9 @@ body {
 }
 
 .search_result_card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
   background-color: #fff;
   border-radius: 5px;
   line-height: 30px;
