@@ -48,3 +48,9 @@ body {
   margin-right: 50px;
 }
 
+.achieve_rate_rate {
+  display: block;
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: 900;
+}
