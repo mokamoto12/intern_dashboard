@@ -48,3 +48,8 @@ body {
   margin-right: 50px;
 }
 
+.bookmark_list {
+  min-height: 50px;
+  max-height: 200px;
+  overflow: scroll;
+}
