@@ -4,19 +4,20 @@ $(function () {
   var trelloClient = new TrelloClient(apiKey, apiToken, 'Trello連携テスト');
   var searchWidgetDom = new SearchWidgetDom('#search_word', '#search_result');
   var searchWidget = new SearchWidget(trelloClient, searchWidgetDom);
-  var searchWidgetSorter = new SearchWidgetSorter('#search_result', 'search_sort_btn_active', 'search_result_list', 'search_result_card', 'search_label');
+  var searchWidgetSorter = new SearchWidgetSorter('#search_result', 'search_sort_btn_active', 'search_result_list', 'search_result_card', 'search_label', 'search_due');
   searchWidget.addSearchFunction();
   searchWidgetSorter.addSortFunction('#search_sort_list', '#search_sort_label', '#search_sort_due');
 });
 
 
 
-var SearchWidgetSorter = function (resultSelector, activeBtnClass, resultListClass, resultCardClass, resultLabelClass) {
+var SearchWidgetSorter = function (resultSelector, activeBtnClass, resultListClass, resultCardClass, resultLabelClass, resultDueClass) {
   this.activeBtnClass= activeBtnClass;
   this.resultSlector = resultSelector;
   this.resultListClass = resultListClass;
   this.resultCardClass = resultCardClass;
   this.resultLabelClass = resultLabelClass;
+  this.resultDueClass = resultDueClass;
 };
 
 SearchWidgetSorter.prototype.addSortFunction = function (list, label, due) {
@@ -69,15 +70,25 @@ SearchWidgetSorter.prototype.getCardsByList = function (list) {
   return $('.' + this.resultCardClass, list);
 };
 
+SearchWidgetSorter.prototype.getDuesByList = function (list) {
+  return $('.' + this.resultDueClass, list);
+};
+
 SearchWidgetSorter.prototype.sortByDue = function () {
+  var self = this;
   var lists = this.loadListsByDom();
-  lists = lists.sort(function (list1, list2) {
-    if (list1.dataset.listId > list2.dataset.listId) {
-      return -1;
-    }
-    return 1;
+  lists.each(function (i, list) {
+    var sortedCard = self.getCardsByList(list).sort(function (card1, card2) {
+      var card1Due = $('.' + self.resultDueClass, card1).html();
+      var card2Due = $('.' + self.resultDueClass, card2).html();
+      if (card1Due > card2Due) return 1;
+      if (card1Due < card2Due) return -1;
+      if (card1Due === undefined && card2Due !== undefined) return 1;
+      if (card1Due !== undefined && card2Due === undefined) return -1;
+    });
+    $(list).remove('.' + self.resultCardClass);
+    $(list).append(sortedCard)
   });
-  this.displayLists(lists);
 };
 
 SearchWidgetSorter.prototype.loadListsByDom = function () {
@@ -87,11 +98,6 @@ SearchWidgetSorter.prototype.loadListsByDom = function () {
 SearchWidgetSorter.prototype.toggleActiveButton = function (activeButtonSelector) {
   $('.' + this.activeBtnClass).removeClass(this.activeBtnClass);
   $(activeButtonSelector).addClass(this.activeBtnClass);
-};
-
-SearchWidgetSorter.prototype.displayCards = function (lists) {
-  $('.' + this.resultListClass).removeChild('.' + this.resultCardClass);
-  $('.' + this.resultListClass).append()
 };
 
 SearchWidgetSorter.prototype.displayLists = function (lists) {
@@ -110,6 +116,8 @@ var SearchWidget = function (client, dom) {
 SearchWidget.prototype.addSearchFunction = function () {
   var self = this;
   $('#search_submit').on('click', function () {
+    $('.search_sort_btn_active').removeClass('search_sort_btn_active');
+    $('#search_sort_list').addClass('search_sort_btn_active');
     self.dom.clearResult();
     self.client.fetchLists().done(function (lists) {
       lists.map(function (list) {
