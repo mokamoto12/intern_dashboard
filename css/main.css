@@ -65,9 +65,12 @@ body {
   color: inherit;
   background-color: #fff;
   border-radius: 5px;
-  line-height: 30px;
   margin: 7px;
   padding: 5px;
+}
+
+.search_result_card_title {
+  line-height: 30px;
 }
 
 .search_list_name {
@@ -132,12 +135,14 @@ body {
 }
 
 .search_label {
+  display: inline-block;
   border-radius: 3px;
   min-width: 40px;
   padding: 1px 10px;
   color: #fff;
   font-weight: 300;
   text-shadow: 0 0 1px rgba(0,0,0,.2),0 0 2px #000;
+  line-height: 15px;
 }
 
 .search_result_card:after {
