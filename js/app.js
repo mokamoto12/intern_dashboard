@@ -75,7 +75,7 @@
   };
 
   WidgetDom.prototype.getAllWidgetElements = function () {
-    return $(this.selector + '>*');
+    return $(this.selector + '>' + this.widgetSelector);
   };
 
   WidgetDom.prototype.displayLeft = function (widgetIds) {
