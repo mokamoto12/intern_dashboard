@@ -1,7 +1,7 @@
 (function ($) {
-  'use strict'
+  'use strict';
   $(function () {
-    var dashboard = new Dashboard(new WidgetStore(), new WidgetDom('#widgets', '#sortable_left', '#sortable_right'));
+    var dashboard = new Dashboard(new WidgetStore(), new WidgetDom('#widgets', '#sortable_left', '#sortable_right', '.widget'));
     dashboard.addNewWidgets();
     dashboard.dispatchWidgetToColumn();
     dashboard.displayWidgets();
@@ -12,12 +12,6 @@
 
 
   var LocalStorageHelper = {
-    getAllItem: function () {
-      return Object.keys(localStorage).map(function (key) {
-        return this.getItem(key);
-      }, this);
-    },
-
     getItem: function (key) {
       return JSON.parse(localStorage.getItem(key));
     },
@@ -49,20 +43,6 @@
   var WidgetStore = function () {
   };
 
-  WidgetStore.prototype.getRank = function (key) {
-    if (LocalStorageHelper.hasItem(key)) {
-      return LocalStorageHelper.getItem(key).rank;
-    }
-    return null;
-  };
-
-  WidgetStore.prototype.getCol = function (key) {
-    if (LocalStorageHelper.hasItem(key)) {
-      return LocalStorageHelper.getItem(key).col;
-    }
-    return null;
-  };
-
   WidgetStore.prototype.sortKeysByRank = function (keys) {
     var self = this;
     return keys.sort(function (val1, val2) {
@@ -87,10 +67,11 @@
 
 
 
-  var WidgetDom = function (selector, leftDisplay, rightDisplay) {
+  var WidgetDom = function (selector, leftDisplay, rightDisplay, widgetSelector) {
     this.selector = selector;
     this.leftDisplay = leftDisplay;
     this.rightDisplay = rightDisplay;
+    this.widgetSelector = widgetSelector;
   };
 
   WidgetDom.prototype.getAllWidgetElements = function () {
@@ -126,10 +107,10 @@
   };
 
   WidgetDom.prototype.updateWidgetRank = function () {
-    $(this.leftDisplay + '>*').map(function (i, elm) {
+    $(this.leftDisplay + '>' + this.widgetSelector).map(function (i, elm) {
       LocalStorageHelper.setItem(elm.id, Object.assign(LocalStorageHelper.getItem(elm.id), {rank: i, col: 'left'}));
     });
-    $(this.rightDisplay + '>*').map(function (i, elm) {
+    $(this.rightDisplay + '>' + this.widgetSelector).map(function (i, elm) {
       LocalStorageHelper.setItem(elm.id, Object.assign(LocalStorageHelper.getItem(elm.id), {rank: i, col: 'right'}));
     });
   };
