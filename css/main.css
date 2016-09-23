@@ -49,7 +49,26 @@ body {
 }
 
 .bookmark_list {
+  margin: 10px;
   min-height: 50px;
   max-height: 200px;
   overflow: scroll;
+
+}
+
+.bookmark_link {
+  display: block;
+  background-color: #eee;
+  margin: 10px;
+  border-radius: 5px;
+  line-height: 30px;
+  text-decoration: none;
+  color: inherit;
+  padding: 0 5px;
+  vertical-align: ;
+}
+
+.bookmark_favicon {
+  vertical-align: text-bottom;
+  margin: 0 5px;
 }
