@@ -13,6 +13,11 @@
 
   var LocalStorageHelper = {
     getItem: function (key) {
+      try {
+        JSON.parse(localStorage.getItem(key));
+      } catch (e) {
+        return localStorage.getItem(key);
+      }
       return JSON.parse(localStorage.getItem(key));
     },
 
@@ -33,7 +38,9 @@
     },
 
     getKeys: function () {
-      return Object.keys(localStorage);
+      return Object.keys(localStorage).filter(function (keys) {
+        return keys !== 'boardId';
+      });
     }
   };
 

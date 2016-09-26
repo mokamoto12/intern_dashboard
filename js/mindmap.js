@@ -1,9 +1,7 @@
 (function ($) {
   'use strict';
   $(function () {
-    var apiKey = '6934d38ef199df9d14099dbc119a7ea5';
-    var apiToken = '28495b56169afac766d6ad94abf619d441c867b588d63a3a17111782b325d87b';
-    var trelloClient = new TrelloClient(apiKey, apiToken, 'sandbox_mindmap');
+    var trelloClient = new TrelloClient('sandbox_mindmap');
     var mindMapDom = new MindMapDom('body');
     var mindMap = new MindMap(mindMapDom, trelloClient);
     mindMap.displayMindMap();

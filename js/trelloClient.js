@@ -1,12 +1,19 @@
-var TrelloClient = function (apiKey, apiToken, boardName) {
+var TrelloClient = function (boardName) {
   var self = this;
+  var apiKey = 'f6d2702dfeed4e80fdec2a4ac93a062d';
+  var apiToken = '7cc812594ec89ef43289b0aa72690739919d18a9abcbf1d7f5dcb72ec9ca994a';
   this.baseUrl = 'https://trello.com/1/';
   this.baseParam = {key: apiKey, token: apiToken};
   this.boardName = boardName;
   $.ajaxSetup({async: false});
-  this.fetchBoards().done(function (json) {
-    self.boardId = self.findBoard(json).id;
-  });
+  if (localStorage.getItem('boardId_' + boardName) === null) {
+    self.fetchBoards().done(function (json) {
+      self.boardId = self.findBoard(json).id;
+      localStorage.setItem('boardId_' + boardName, self.findBoard(json).id);
+    });
+  } else {
+    self.boardId = localStorage.getItem('boardId_' + boardName);
+  }
   $.ajaxSetup({async: true});
 };
 

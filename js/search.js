@@ -1,7 +1,5 @@
 $(function () {
-  var apiKey = '6934d38ef199df9d14099dbc119a7ea5';
-  var apiToken = '28495b56169afac766d6ad94abf619d441c867b588d63a3a17111782b325d87b';
-  var trelloClient = new TrelloClient(apiKey, apiToken, 'Trello連携テスト');
+  var trelloClient = new TrelloClient('Trello連携テスト');
   var searchWidgetDom = new SearchWidgetDom('#search_word', '#search_result');
   var searchWidget = new SearchWidget(trelloClient, searchWidgetDom);
   var searchWidgetSorter = new SearchWidgetSorter('#search_result', 'search_sort_btn_active', 'search_result_list', 'search_result_card', 'search_label', 'search_due');

@@ -1,5 +1,5 @@
 $(function () {
-  var trelloClient = new TrelloClient('6934d38ef199df9d14099dbc119a7ea5', '28495b56169afac766d6ad94abf619d441c867b588d63a3a17111782b325d87b', 'Trello連携テスト');
+  var trelloClient = new TrelloClient('Trello連携テスト');
   var store = new BookmarkStore(trelloClient, 'ブックマーク');
   var bookmarkWidget = new BookmarkWidget(store, 'ブックマーク', '#bookmark_submit', '#bookmark_target', '#bookmark_list');
   bookmarkWidget.init();
