@@ -90,3 +90,114 @@ body {
   vertical-align: text-bottom;
   margin: 0 5px;
 }
+
+.search_result_box {
+  max-height: 300px;
+  overflow: scroll;
+  border-radius: 5px;
+}
+
+.search_result_list {
+  background-color: #eee;
+  padding: 10px;
+}
+
+.search_result_card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background-color: #fff;
+  border-radius: 5px;
+  margin: 7px;
+  padding: 5px;
+}
+
+.search_result_card_title {
+  line-height: 30px;
+}
+
+.search_list_name {
+}
+
+.search_sort_btn {
+  display: inline-block;
+  width: 100px;
+  height: 30px;
+  text-align: center;
+  text-decoration: none;
+  line-height: 30px;
+  outline: none;
+  border-width: 0px;
+  background-color: #eee;
+}
+
+.search_sort_btn:hover {
+  background-color: #ddd;
+}
+
+.search_sort_btn_active,
+.search_sort_btn_active:hover {
+  background-color: #ccc;
+}
+
+.search_submit_btn {
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+  text-align: center;
+  text-decoration: none;
+  line-height: 30px;
+  outline: none;
+  border-width: 0px;
+  background-color: #eee;
+}
+
+.search_submit_btn:hover {
+  background-color: #ddd;
+}
+
+.search_text_box {
+  border: solid 1px #ccc;
+  width: 200px;
+  height: 28px;
+  font-size: 1em;
+  vertical-align: bottom;
+}
+
+.search_btn_box {
+  float: right;
+  margin: 10px;
+}
+
+.search_form:after {
+  display: block;
+  clear: both;
+  height: 0;
+  visibility: hidden;
+  content: '.';
+}
+
+.search_label {
+  display: inline-block;
+  border-radius: 3px;
+  min-width: 40px;
+  padding: 1px 10px;
+  color: #fff;
+  font-weight: 300;
+  text-shadow: 0 0 1px rgba(0,0,0,.2),0 0 2px #000;
+  line-height: 15px;
+}
+
+.search_result_card:after {
+  display: block;
+  clear: both;
+  height: 0;
+  visibility: hidden;
+  content: '.';
+}
+
+.search_due {
+  float: right;
+  color: #333;
+  margin-right: 10px;
+}
