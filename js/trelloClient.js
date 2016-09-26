@@ -1,7 +1,7 @@
 var TrelloClient = function (apiKey, apiToken, boardName) {
   var self = this;
   this.baseUrl = 'https://trello.com/1/';
-  this.baseParam = {key:apiKey, token:apiToken};
+  this.baseParam = {key: apiKey, token: apiToken};
   this.boardName = boardName;
   $.ajaxSetup({async: false});
   this.fetchBoards().done(function (json) {
@@ -25,8 +25,8 @@ TrelloClient.prototype.fetchLists = function () {
   return $.getJSON(this.baseUrl + 'boards/' + this.boardId + '/lists', Object.assign({}, this.baseParam, {cards: 'open'}))
 };
 
-TrelloClient.prototype.postCard = function (listId, val) {
-  return $.post(this.baseUrl + 'cards', Object.assign({}, this.baseParam, {idList: listId, name: val}));
+TrelloClient.prototype.postCard = function (listId, val, option) {
+  return $.post(this.baseUrl + 'cards', Object.assign({}, this.baseParam, {idList: listId, name: val}, option));
 };
 
 TrelloClient.prototype.postList = function (name) {

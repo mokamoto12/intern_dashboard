@@ -48,7 +48,6 @@ body {
   margin-right: 50px;
 }
 
-
 .mind_map__node {
   display: block;
   background-color: #eee;
@@ -58,4 +57,11 @@ body {
   line-height: 50px;
   text-decoration: none;
   color: inherit;
+}
+
+.achieve_rate_rate {
+  display: block;
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: 900;
 }
