@@ -48,6 +48,13 @@ body {
   margin-right: 50px;
 }
 
+.achieve_rate_rate {
+  display: block;
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: 900;
+}
+
 .mind_map__node {
   display: block;
   background-color: #eee;
@@ -59,9 +66,27 @@ body {
   color: inherit;
 }
 
-.achieve_rate_rate {
+.bookmark_list {
+  margin: 10px;
+  min-height: 50px;
+  max-height: 200px;
+  overflow: scroll;
+
+}
+
+.bookmark_link {
   display: block;
-  text-align: center;
-  font-size: 1.5em;
-  font-weight: 900;
+  background-color: #eee;
+  margin: 10px;
+  border-radius: 5px;
+  line-height: 30px;
+  text-decoration: none;
+  color: inherit;
+  padding: 0 5px;
+  vertical-align: ;
+}
+
+.bookmark_favicon {
+  vertical-align: text-bottom;
+  margin: 0 5px;
 }

@@ -25,8 +25,8 @@ TrelloClient.prototype.fetchLists = function () {
   return $.getJSON(this.baseUrl + 'boards/' + this.boardId + '/lists', Object.assign({}, this.baseParam, {cards: 'open'}))
 };
 
-TrelloClient.prototype.postCard = function (listId, val, option) {
-  return $.post(this.baseUrl + 'cards', Object.assign({}, this.baseParam, {idList: listId, name: val}, option));
+TrelloClient.prototype.postCard = function (listId, val, optionVal) {
+  return $.post(this.baseUrl + 'cards', Object.assign({}, this.baseParam, {idList: listId, name: val}, optionVal));
 };
 
 TrelloClient.prototype.postList = function (name) {
