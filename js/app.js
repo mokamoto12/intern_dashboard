@@ -1,7 +1,8 @@
 (function ($) {
   'use strict';
   $(function () {
-    var dashboard = new Dashboard(new WidgetStore(), new WidgetDom('#widgets', '#sortable_left', '#sortable_right', '.widget'));
+    var widgetDom = new WidgetDom('#widgets', '#left_column', '#right_column', '.widget');
+    var dashboard = new Dashboard(widgetDom);
     dashboard.addTime('#time');
     dashboard.addNewWidgets();
     dashboard.dispatchWidgetToColumn();
@@ -47,66 +48,41 @@
 
 
 
-
-  var WidgetStore = function () {
-  };
-
-  WidgetStore.prototype.sortKeysByRank = function (keys) {
-    var self = this;
-    return keys.sort(function (val1, val2) {
-      return self.sortRankCheck(val1, val2);
-    })
-  };
-
-  WidgetStore.prototype.sortRankCheck = function (val1, val2) {
-    if (LocalStorageHelper.getItem(val1).rank > LocalStorageHelper.getItem(val2).rank) {
-      return 1;
-    }
-    return -1;
-  };
-
-  WidgetStore.prototype.getColumnKeys = function (col) {
-    return LocalStorageHelper.getKeys().filter(function (key) {
-      return LocalStorageHelper.getItem(key).col === col;
-    });
-  };
-
-
-
-
-
-  var WidgetDom = function (selector, leftDisplay, rightDisplay, widgetSelector) {
-    this.selector = selector;
-    this.leftDisplay = leftDisplay;
-    this.rightDisplay = rightDisplay;
+  var WidgetDom = function (widgetsBoxSelector, leftDisplaySelector, rightDisplaySelector, widgetSelector) {
+    this.widgetBox = widgetsBoxSelector;
     this.widgetSelector = widgetSelector;
+    this.leftDisplay = leftDisplaySelector;
+    this.rightDisplay = rightDisplaySelector;
+    this.$leftDisplay = $(leftDisplaySelector);
+    this.$rightDisplay = $(rightDisplaySelector);
+    this.$allWidgets = $(widgetsBoxSelector + '>' + widgetSelector);
   };
 
   WidgetDom.prototype.getAllWidgetElements = function () {
-    return $(this.selector + '>' + this.widgetSelector);
+    return this.$allWidgets;
   };
 
   WidgetDom.prototype.displayLeft = function (widgetIds) {
     widgetIds.map(function (widgetId) {
-      $(this.leftDisplay).append($(this.selector + '>#' + widgetId));
+      this.$leftDisplay.append($(this.widgetBox + '>#' + widgetId));
     }, this);
   };
 
   WidgetDom.prototype.displayRight = function (widgetIds) {
     widgetIds.map(function (widgetId) {
-      $(this.rightDisplay).append($(this.selector + '>#' + widgetId));
+      this.$rightDisplay.append($(this.widgetBox + '>#' + widgetId));
     }, this);
   };
 
   WidgetDom.prototype.addEvent = function () {
     var self = this;
-    $(self.leftDisplay).sortable({
+    self.$leftDisplay.sortable({
       connectWith: self.rightDisplay,
       update: function (e, ui) {
         self.updateWidgetRank();
       }
     });
-    $(self.rightDisplay).sortable({
+    self.$rightDisplay.sortable({
       connectWith: self.leftDisplay,
       update: function (e, ui) {
         self.updateWidgetRank();
@@ -114,20 +90,27 @@
     });
   };
 
+  WidgetDom.prototype.getLeftWidgets = function () {
+    return $(this.leftDisplay + '>' + this.widgetSelector);
+  };
+
+  WidgetDom.prototype.getRightWidgets = function () {
+    return $(this.rightDisplay + '>' + this.widgetSelector);
+  };
+
   WidgetDom.prototype.updateWidgetRank = function () {
-    $(this.leftDisplay + '>' + this.widgetSelector).map(function (i, elm) {
-      LocalStorageHelper.setItem(elm.id, Object.assign(LocalStorageHelper.getItem(elm.id), {rank: i, col: 'left'}));
+    this.getLeftWidgets().map(function (idx, elm) {
+      LocalStorageHelper.setItem(elm.id, {rank: idx, col: 'left'});
     });
-    $(this.rightDisplay + '>' + this.widgetSelector).map(function (i, elm) {
-      LocalStorageHelper.setItem(elm.id, Object.assign(LocalStorageHelper.getItem(elm.id), {rank: i, col: 'right'}));
+    this.getRightWidgets().map(function (idx, elm) {
+      LocalStorageHelper.setItem(elm.id, {rank: idx, col: 'right'});
     });
   };
 
 
 
 
-  var Dashboard = function (store, dom) {
-    this.store = store;
+  var Dashboard = function (dom) {
     this.dom = dom;
     this.leftColumnWidgetId = [];
     this.rightColumnWidgetId = [];
@@ -151,8 +134,8 @@
   };
 
   Dashboard.prototype.dispatchWidgetToColumn = function () {
-    this.leftColumnWidgetId = this.store.sortKeysByRank(this.store.getColumnKeys('left'));
-    this.rightColumnWidgetId = this.store.sortKeysByRank(this.store.getColumnKeys('right'));
+    this.leftColumnWidgetId = this.sortKeysByRank(this.getColumnKeysByStorage('left'));
+    this.rightColumnWidgetId = this.sortKeysByRank(this.getColumnKeysByStorage('right'));
   };
 
   Dashboard.prototype.displayWidgets = function () {
@@ -162,5 +145,25 @@
 
   Dashboard.prototype.addColumnEvent = function () {
     this.dom.addEvent();
+  };
+
+  Dashboard.prototype.sortKeysByRank = function (keys) {
+    var self = this;
+    return keys.sort(function (val1, val2) {
+      return self.sortRankCheck(val1, val2);
+    })
+  };
+
+  Dashboard.prototype.sortRankCheck = function (val1, val2) {
+    if (LocalStorageHelper.getItem(val1).rank > LocalStorageHelper.getItem(val2).rank) {
+      return 1;
+    }
+    return -1;
+  };
+
+  Dashboard.prototype.getColumnKeysByStorage = function (col) {
+    return LocalStorageHelper.getKeys().filter(function (key) {
+      return LocalStorageHelper.getItem(key).col === col;
+    });
   };
 }(jQuery));
