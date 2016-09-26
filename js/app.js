@@ -2,6 +2,7 @@
   'use strict';
   $(function () {
     var dashboard = new Dashboard(new WidgetStore(), new WidgetDom('#widgets', '#sortable_left', '#sortable_right', '.widget'));
+    dashboard.addTime('#time');
     dashboard.addNewWidgets();
     dashboard.dispatchWidgetToColumn();
     dashboard.displayWidgets();
@@ -130,6 +131,11 @@
     this.dom = dom;
     this.leftColumnWidgetId = [];
     this.rightColumnWidgetId = [];
+  };
+
+  Dashboard.prototype.addTime = function (timeSelector) {
+    var date = new Date();
+    $(timeSelector).html('更新時 : ' + date.toLocaleString());
   };
 
   Dashboard.prototype.addNewWidgets = function () {
