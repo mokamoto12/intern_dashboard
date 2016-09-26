@@ -1,0 +1,26 @@
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/redmond/jquery-ui.css">
+<script src="js/trelloClient.js"></script>
+<script src="js/onePushAdd.js"></script>
+<div id="one_push_add" class="widget">
+  <h2>ワンプッシュ登録</h2>
+  <form action="#">
+    <p><label>
+      タイトル<input type="text" id="one_push_title">
+    </label></p>
+    <p><label>
+      締め切り<input type="text" id="one_push_due">
+    </label></p>
+    <p><label>
+      説明<textarea id="one_push_desc"></textarea>
+    </label></p>
+    <p><label>
+      リスト<select id="one_push_list_box"></select>
+    </label></p>
+    <input type="button" value="面接">
+    <input type="button" value="ＥＳ">
+    <input type="button" value="説明会">
+    <input type="submit" id="one_push_submit" value="登録ボタン">
+  </form>
+</div>
