@@ -1,8 +1,8 @@
 $(function () {
   var trelloClient = new TrelloClient('Trello連携テスト');
   var searchWidgetDom = new SearchWidgetDom('#search_word', '#search_result');
-  var searchWidget = new SearchWidget(trelloClient, searchWidgetDom);
   var searchWidgetSorter = new SearchWidgetSorter('#search_result', 'search_sort_btn_active', 'search_result_list', 'search_result_card', 'search_label', 'search_due');
+  var searchWidget = new SearchWidget(trelloClient, searchWidgetDom, searchWidgetSorter);
   searchWidget.addSearchFunction();
   searchWidgetSorter.addSortFunction('#search_sort_list', '#search_sort_label', '#search_sort_due');
 });
@@ -106,21 +106,19 @@ SearchWidgetSorter.prototype.displayLists = function (lists) {
 
 
 
-var SearchWidget = function (client, dom) {
+var SearchWidget = function (client, dom, sort) {
   this.client = client;
   this.dom = dom;
+  this.sort = sort;
 };
 
 SearchWidget.prototype.addSearchFunction = function () {
   var self = this;
   $('#search_submit').on('click', function () {
-    $('.search_sort_btn_active').removeClass('search_sort_btn_active');
-    $('#search_sort_list').addClass('search_sort_btn_active');
+    self.sort.toggleActiveButton('#search_sort_list');
     self.dom.clearResult();
     self.client.fetchLists().done(function (lists) {
-      lists.map(function (list) {
-        $('#search_result').append(self.dom.createListElm(list));
-      });
+      self.dom.addResult(lists);
     });
   });
 };
@@ -130,14 +128,20 @@ SearchWidget.prototype.addSearchFunction = function () {
 
 var SearchWidgetDom = function (searchWordSelector, searchResultSelector) {
   this.searchWordSelector = searchWordSelector;
-  this.searchResultSelector = searchResultSelector;
+  this.$searchResultSelector = $(searchResultSelector);
 };
 
 SearchWidgetDom.prototype.clearResult = function () {
-  $(this.searchResultSelector).empty();
+  this.$searchResultSelector.empty();
 };
 SearchWidgetDom.prototype.loadSearchWord = function () {
   return $(this.searchWordSelector).val();
+};
+
+SearchWidgetDom.prototype.addResult = function (lists) {
+  lists.map(function (list) {
+    this.$searchResultSelector.append(this.createListElm(list));
+  }, this);
 };
 
 SearchWidgetDom.prototype.createCardElm = function (card) {

@@ -59,17 +59,17 @@
   };
 
   WidgetDom.prototype.getAllWidgetElements = function () {
-    return this.$allWidgets;
+    return this.$allWidgets.get();
   };
 
   WidgetDom.prototype.displayLeft = function (widgetIds) {
-    widgetIds.map(function (widgetId) {
+    widgetIds.forEach(function (widgetId) {
       this.$leftDisplay.append($(this.widgetBox + '>#' + widgetId));
     }, this);
   };
 
   WidgetDom.prototype.displayRight = function (widgetIds) {
-    widgetIds.map(function (widgetId) {
+    widgetIds.forEach(function (widgetId) {
       this.$rightDisplay.append($(this.widgetBox + '>#' + widgetId));
     }, this);
   };
@@ -99,10 +99,10 @@
   };
 
   WidgetDom.prototype.updateWidgetRank = function () {
-    this.getLeftWidgets().map(function (idx, elm) {
+    this.getLeftWidgets().each(function (idx, elm) {
       LocalStorageHelper.setItem(elm.id, {rank: idx, col: 'left'});
     });
-    this.getRightWidgets().map(function (idx, elm) {
+    this.getRightWidgets().each(function (idx, elm) {
       LocalStorageHelper.setItem(elm.id, {rank: idx, col: 'right'});
     });
   };
@@ -122,7 +122,7 @@
   };
 
   Dashboard.prototype.addNewWidgets = function () {
-    this.getNotRegisterWidgetIds().map(function (i, id) {
+    this.getNotRegisterWidgetIds().forEach(function (i, id) {
       LocalStorageHelper.setItem(id, {col:'left', rank:-1});
     }, this);
   };

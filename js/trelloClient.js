@@ -9,7 +9,7 @@ var TrelloClient = function (boardName) {
   if (localStorage.getItem('boardId_' + boardName) === null) {
     self.fetchBoards().done(function (json) {
       self.boardId = self.findBoard(json).id;
-      localStorage.setItem('boardId_' + boardName, self.findBoard(json).id);
+      localStorage.setItem('boardId_' + boardName, self.boardId);
     });
   } else {
     self.boardId = localStorage.getItem('boardId_' + boardName);
