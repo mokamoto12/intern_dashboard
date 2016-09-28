@@ -122,13 +122,13 @@
   };
 
   Dashboard.prototype.addNewWidgets = function () {
-    this.getNotRegisterWidgetIds().forEach(function (i, id) {
+    this.getNotRegisterWidgetIds().forEach(function (id) {
       LocalStorageHelper.setItem(id, {col:'left', rank:-1});
     }, this);
   };
 
   Dashboard.prototype.getNotRegisterWidgetIds = function () {
-    return this.dom.getAllWidgetElements().map(function (i, elm) {
+    return this.dom.getAllWidgetElements().map(function (elm) {
       return LocalStorageHelper.notHasItem(elm.id);
     }, this);
   };
