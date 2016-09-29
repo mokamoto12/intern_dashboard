@@ -2,11 +2,11 @@ $(function () {
   //カレンダーで日付登録
   $('#one_push_due').datepicker();
 
-  var trelloUsername = 'me';
   var trelloClient = new TrelloClient('Trello連携テスト');
+  var $list_box = $('#one_push_list_box');
   trelloClient.fetchLists().done(function (lists) {
-    lists.map(function (list) {
-      $('#one_push_list_box').append('<option id="' + list.id + '">' + list.name + '</option>');
+    lists.forEach(function (list) {
+      $list_box.append('<option id="' + list.id + '">' + list.name + '</option>');
     });
   });
 
