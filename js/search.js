@@ -118,9 +118,28 @@ SearchWidget.prototype.addSearchFunction = function () {
     self.sort.toggleActiveButton('#search_sort_list');
     self.dom.clearResult();
     self.client.fetchLists().done(function (lists) {
-      self.dom.addResult(lists);
+      var searchWord = self.dom.loadSearchWord();
+      var hitCardsInLists = lists.map(function (list) {
+        return self.searchCardInList(list, searchWord);
+      }, this);
+      self.dom.addResult(hitCardsInLists);
     });
   });
+};
+
+SearchWidget.prototype.searchCardInList = function (list, word) {
+  var regexp = new RegExp(word);
+  var self = this;
+  list.cards = list.cards.filter(function (card) {
+    return self.isHitWord(card, regexp);
+  });
+  return list;
+};
+
+SearchWidget.prototype.isHitWord = function (card, regexp) {
+  return card.name.match(regexp) || card.desc.match(regexp) || card.labels.some(function (label) {
+      return label.name.match(regexp);
+    });
 };
 
 
@@ -139,7 +158,7 @@ SearchWidgetDom.prototype.loadSearchWord = function () {
 };
 
 SearchWidgetDom.prototype.addResult = function (lists) {
-  lists.map(function (list) {
+  lists.forEach(function (list) {
     this.$searchResultSelector.append(this.createListElm(list));
   }, this);
 };
@@ -160,17 +179,8 @@ SearchWidgetDom.prototype.createCardElm = function (card) {
 SearchWidgetDom.prototype.createListElm = function (list) {
   var self = this;
   var $list = $('<div data-list-id="' + list.id + '" class="search_result_list"><h3 class="search_list_name">' + list.name + '</h3></div>');
-  var regexp = new RegExp(this.loadSearchWord());
   list.cards.forEach(function (card) {
-    if (self.checkWordMatchInCard(card, regexp)) {
-      $list.append(self.createCardElm(card));
-    }
+    $list.append(self.createCardElm(card));
   });
   return $list;
-};
-
-SearchWidgetDom.prototype.checkWordMatchInCard = function (card, regexp) {
-  return card.name.match(regexp) || card.desc.match(regexp) || card.labels.some(function (label) {
-      return label.name.match(regexp);
-    });
 };
