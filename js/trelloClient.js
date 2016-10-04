@@ -23,10 +23,9 @@ TrelloClient.prototype.fetchBoards = function () {
 };
 
 TrelloClient.prototype.findBoard = function (json) {
-  var self = this;
   return json.find(function (obj) {
-    return obj.name === self.boardName;
-  });
+    return obj.name === this.boardName;
+  }, this);
 };
 
 TrelloClient.prototype.fetchLists = function () {
@@ -42,7 +41,6 @@ TrelloClient.prototype.postList = function (name) {
 };
 
 TrelloClient.prototype.findList = function (lists, name) {
-  var self = this;
   return lists.find(function (list) {
     return list.name === name;
   });
