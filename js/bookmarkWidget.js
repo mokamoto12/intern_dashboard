@@ -17,7 +17,7 @@ var BookmarkWidget = function (store, bookmarkListName, submitSelector, targetSe
 
 BookmarkWidget.prototype.init = function () {
   var self = this;
-  this.store.getAllItems().done(function (bookmarks) {
+  this.store.fetchAllBookmarks().done(function (bookmarks) {
     bookmarks.forEach(function (bookmark) {
       self.appendBookmarkElm(self.createBookmarkElement(bookmark.url, bookmark.title, bookmark.image));
     });
@@ -85,7 +85,7 @@ BookmarkStore.prototype.addBookmark = function (url, title, imageSrc) {
   self.client.postCard(self.listId, title, {desc: JSON.stringify({url: url, image: imageSrc})});
 };
 
-BookmarkStore.prototype.getAllItems = function () {
+BookmarkStore.prototype.fetchAllBookmarks = function () {
   var self = this;
   var items = [];
   var d = $.Deferred();
