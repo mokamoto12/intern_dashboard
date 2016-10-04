@@ -5,14 +5,15 @@ var TrelloClient = function (boardName) {
   this.baseUrl = 'https://trello.com/1/';
   this.baseParam = {key: apiKey, token: apiToken};
   this.boardName = boardName;
+  var boardIdCacheKey = '__cache_boardId_' + boardName + '_' + apiToken;
   $.ajaxSetup({async: false});
-  if (localStorage.getItem('boardId_' + boardName) === null) {
+  if (localStorage.getItem(boardIdCacheKey) === null) {
     self.fetchBoards().done(function (json) {
       self.boardId = self.findBoard(json).id;
-      localStorage.setItem('boardId_' + boardName, self.boardId);
+      localStorage.setItem(boardIdCacheKey, self.boardId);
     });
   } else {
-    self.boardId = localStorage.getItem('boardId_' + boardName);
+    self.boardId = localStorage.getItem(boardIdCacheKey);
   }
   $.ajaxSetup({async: true});
 };

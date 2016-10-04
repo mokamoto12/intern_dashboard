@@ -41,7 +41,7 @@
 
     getKeys: function () {
       return Object.keys(localStorage).filter(function (keys) {
-        return keys !== 'boardId';
+        return !keys.match(/^__cache_/);
       });
     }
   };
