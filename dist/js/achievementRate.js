@@ -1,27 +1,30 @@
 $(function () {
   var trelloClient = new TrelloClient('Trello連携テスト');
-  var achieveRateWidget = new AchieveRateWidget(trelloClient, '#achieve_rate');
-  trelloClient.fetchLists().done(function (lists) {
-    achieveRateWidget.displayRate(achieveRateWidget.calcRate('done', lists));
-  });
+  var achieveRate = new AchieveRate(trelloClient, '#achieve_rate');
+  achieveRate.show('done');
 });
 
 
 
-var AchieveRateWidget = function (trelloClient, selector) {
+var AchieveRate = function (trelloClient, selector) {
   this.client = trelloClient;
   this.selector = selector;
 };
 
-AchieveRateWidget.prototype.calcRate = function (doneList, lists) {
+AchieveRate.prototype.show = function (calcListName) {
   var self = this;
-  var achieveCardCnt = self.client.findList(lists, doneList).cards.length;
-  var allCardCnt = lists.reduce(function (prev, list) {
-    return prev + list.cards.length;
-  }, 0);
-  return (Math.round(10000 * (achieveCardCnt / allCardCnt))) / 100;
+  this.client.fetchLists().done(function (lists) {
+    // listsから達成率を計算し表示する
+  });
 };
 
-AchieveRateWidget.prototype.displayRate = function (rate) {
-  $(this.selector).append('<span class="achieve_rate_rate">' + rate + '%</span>');
+AchieveRate.prototype.calcRate = function (calcListName, lists) {
+  var self = this;
+  var achieveCardCnt = ; // calcListNameのリストを探しそれのcardsの数を数える
+  var allCardCnt = ; // listsそれぞれのcardsの数を合計する
+  return achieveCardCnt / allCardCnt;
+};
+
+AchieveRate.prototype.displayRate = function (rate) {
+  // ウィジェットに達成率を表示する
 };
