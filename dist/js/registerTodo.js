@@ -1,42 +1,28 @@
 $(function () {
   //カレンダーで日付登録
   var trelloClient = new TrelloClient('Trello連携テスト');
-  var registerTodo = new RegisterTodo(trelloClient, '#register_todo_submit', '#register_todo_list_box', '#register_todo_title', '#register_todo_desc', '#register_todo_due');
+  var registerTodo = new RegisterTodo();
 
   registerTodo.addDatePicker();
   registerTodo.addListOptions();
   registerTodo.addRegisterEvent();
 });
 
-var RegisterTodo = function (client, submitSelector, listBoxSelector, titleSelector, descSelector, dueSelector) {
-  this.client = client;
-  this.$submit = $(submitSelector);
-  this.SelectedListSelector = listBoxSelector + '>option:selected';
-  this.$listBox = $(listBoxSelector);
-  this.$title = $(titleSelector);
-  this.$desc = $(descSelector);
-  this.$due = $(dueSelector);
+var RegisterTodo = function () {
+  // 必要なフィールドを追加していく
 };
 
 RegisterTodo.prototype.addDatePicker = function () {
-  this.$due.datepicker();
+  // 日付入力欄に.datepicker()する
 };
 
 RegisterTodo.prototype.addListOptions = function () {
-  var self = this;
-  this.client.fetchLists().done(function (lists) {
-    lists.forEach(function (list) {
-      self.$listBox.append('<option id="' + list.id + '">' + list.name + '</option>');
-    });
-  });
+  // Trelloからリスト一覧を取得しそれぞれoptionタグを作成する
+  // <option id="リストのID">リストの名前</option>
+  // 作成したタグはリストのselectタグに追加する
 };
 
 RegisterTodo.prototype.addRegisterEvent = function () {
-  var self = this;
-  this.$submit.on('click', function () {
-    self.client.postCard($(self.SelectedListSelector).attr('id'), self.$title.val(), {
-      desc: self.$desc.val(),
-      due: self.$due.val()
-    });
-  });
+  // ボタンがクリックされたら選択したリストに入力したタイトル、期限、説明のカードを追加する
+  // 期限と説明はそれぞれ{desc: 説明, due: 期限}としてTrelloClient.prototype.postCardのoptionValに渡す
 };
