@@ -1,20 +1,42 @@
 $(function () {
   //カレンダーで日付登録
-  $('#register_todo_due').datepicker();
-
   var trelloClient = new TrelloClient('Trello連携テスト');
-  var $list_box = $('#register_todo_list_box');
-  trelloClient.fetchLists().done(function (lists) {
+  var registerTodo = new RegisterTodo(trelloClient, '#register_todo_submit', '#register_todo_list_box', '#register_todo_title', '#register_todo_desc', '#register_todo_due');
+
+  registerTodo.addDatePicker();
+  registerTodo.addListOptions();
+  registerTodo.addRegisterEvent();
+});
+
+var RegisterTodo = function (client, submitSelector, listBoxSelector, titleSelector, descSelector, dueSelector) {
+  this.client = client;
+  this.$submit = $(submitSelector);
+  this.SelectedListSelector = listBoxSelector + '>option:selected';
+  this.$listBox = $(listBoxSelector);
+  this.$title = $(titleSelector);
+  this.$desc = $(descSelector);
+  this.$due = $(dueSelector);
+};
+
+RegisterTodo.prototype.addDatePicker = function () {
+  this.$due.datepicker();
+};
+
+RegisterTodo.prototype.addListOptions = function () {
+  var self = this;
+  this.client.fetchLists().done(function (lists) {
     lists.forEach(function (list) {
-      $list_box.append('<option id="' + list.id + '">' + list.name + '</option>');
+      self.$listBox.append('<option id="' + list.id + '">' + list.name + '</option>');
     });
   });
+};
 
-  //新しいTrelloカードを追加
-  $('#register_todo_submit').on('click', function () {
-    trelloClient.postCard($('#register_todo_list_box>option:selected').attr('id'), $('#register_todo_title').val(), {
-      desc: $('#register_todo_desc').val(),
-      due: $('#register_todo_due').val()
-    })
+RegisterTodo.prototype.addRegisterEvent = function () {
+  var self = this;
+  this.$submit.on('click', function () {
+    self.client.postCard($(self.SelectedListSelector).attr('id'), self.$title.val(), {
+      desc: self.$desc.val(),
+      due: self.$due.val()
+    });
   });
-});
+};
