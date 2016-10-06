@@ -35,17 +35,11 @@ SearchWidget.prototype.addSearchFunction = function (eventSelector) {
 };
 
 SearchWidget.prototype.searchCard = function (list, word) {
-  var self = this;
-  list.cards = list.cards.filter(function (card) {
-    return self.isHitWord(card, word);
-  });
-  return list;
+  // list.cardsに対してisHitWordでfilterを行い、filterしたlistを返す
 };
 
 SearchWidget.prototype.isHitWord = function (card, word) {
-  return card.name.match(word) || card.desc.match(word) || card.labels.some(function (label) {
-      return label.name.match(word);
-    });
+  // cardに対して名前(name)、説明(desc)、ラベル(labels<name>)がwordを含むかチェックする
 };
 
 
