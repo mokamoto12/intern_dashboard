@@ -4,36 +4,38 @@
     var trelloClient = new TrelloClient('sandbox_mindmap');
     var mindMapDom = new MindMapDom('body');
     var mindMap = new MindMap(mindMapDom, trelloClient);
-    mindMap.displayMindMap();
+    mindMap.show();
     mindMap.addAddNodeFunction('node_text', 'add_node');
   });
 
+
+
   var MindMap = function (mindMapDom, trelloClient) {
-    this.mindMapDom = mindMapDom;
+    this.dom = mindMapDom;
     this.client = trelloClient;
   };
 
-  MindMap.prototype.displayMindMap = function () {
+  MindMap.prototype.show = function () {
     var self = this;
-    self.mindMapDom.clearMindMap();
-    self.client.fetchLists().done(function (lists) {
+    this.dom.clearMindMap();
+    this.client.fetchLists().done(function (lists) {
       var mindMapData = self.buildMindMapData(lists, 'マインドマップ');
-      self.mindMapDom.displayMindMap(mindMapData);
+      self.dom.displayMindMap(mindMapData);
     });
   };
 
-  MindMap.prototype.buildMindMapData = function (lists, name) {
-    var retObj = {name: name};
-    retObj.child = lists.find(function (listObj) {
-      return listObj.name === name;
+  MindMap.prototype.buildMindMapData = function (allLists, parentNode) {
+    var retObj = {name: parentNode};
+    retObj.child = allLists.find(function (listObj) {
+      return listObj.name === parentNode;
     }, this).cards.map(function (cardObj) {
-      return this.buildMindMapData(lists, cardObj.name);
+      return this.buildMindMapData(allLists, cardObj.name);
     }, this);
     return retObj;
   };
 
   MindMap.prototype.addAddNodeFunction = function (textId, buttonId) {
-    this.mindMapDom.addAddNodeElement(textId, buttonId);
+    this.dom.addAddNodeElement(textId, buttonId);
     this.addAddNodeEvent(textId, buttonId);
   };
 
@@ -41,13 +43,13 @@
     var self = this;
     $('#' + buttonId).on('click', function () {
       self.client.fetchLists().done(function (lists) {
-        var activeNodeName = self.mindMapDom.getActiveNodeName();
+        var activeNodeName = self.dom.getActiveNodeName();
         var listId = self.client.findList(lists, activeNodeName).id;
         var nodeName = $('#' + textId).val();
         console.log(nodeName)
         self.client.postList(nodeName).done(function () {
           self.client.postCard(listId, nodeName).done(function () {
-            self.displayMindMap();
+            self.show();
           });
         });
       });
@@ -61,6 +63,41 @@
   var MindMapDom = function (selector) {
     this.selector = selector;
   };
+
+  MindMapDom.prototype.clearMindMap = function () {
+    $(this.selector + '>ul').remove();
+    $(this.selector + '>a').remove();
+    $(this.selector + '>svg').remove();
+  };
+
+  MindMapDom.prototype.addMindMapElement = function (data) {
+    $(this.selector).append(this.createElement(data));
+  };
+
+  MindMapDom.prototype.createElement = function (data) {
+    var $li = $('<li>').append('<a href="#">' + data.name + '</a>');
+    var appendElm = data.child.map(function (d) {
+      return this.createElement(d);
+    }, this);
+    $li.append(appendElm);
+    return $('<ul>').append($li);
+  };
+
+  MindMapDom.prototype.addAddNodeElement = function (textId, buttonId) {
+    this.addElement($('<input id="' + textId + '" type="text">'));
+    this.addElement($('<button id="' + buttonId + '">ノードを追加</button>'));
+  };
+
+  MindMapDom.prototype.addElement = function (elm) {
+    $(this.selector).append(elm);
+  };
+
+  MindMapDom.prototype.getActiveNodeName = function () {
+    return $('.active').html();
+  };
+
+
+
 
   MindMapDom.prototype.displayMindMap = function (data) {
     var self = this;
@@ -105,37 +142,5 @@
     $(self.selector + '>ul>li>ul').each(function() {
       $('>li', this).each(addLI);
     });
-  };
-
-  MindMapDom.prototype.clearMindMap = function () {
-    $(this.selector + '>ul').remove();
-    $(this.selector + '>a').remove();
-    $(this.selector + '>svg').remove();
-  };
-
-  MindMapDom.prototype.addMindMapElement = function (data) {
-    $(this.selector).append(this.createElement(data));
-  };
-
-  MindMapDom.prototype.createElement = function (data) {
-    var $li = $('<li>').append('<a href="#">' + data.name + '</a>');
-    var appendElm = data.child.map(function (d) {
-      return this.createElement(d);
-    }, this);
-    $li.append(appendElm);
-    return $('<ul>').append($li);
-  };
-
-  MindMapDom.prototype.addAddNodeElement = function (textId, buttonId) {
-    this.addElement($('<input id="' + textId + '" type="text">'));
-    this.addElement($('<button id="' + buttonId + '">ノードを追加</button>'));
-  };
-
-  MindMapDom.prototype.addElement = function (elm) {
-    $(this.selector).append(elm);
-  };
-
-  MindMapDom.prototype.getActiveNodeName = function () {
-    return $('.active').html();
   };
 }(jQuery));
