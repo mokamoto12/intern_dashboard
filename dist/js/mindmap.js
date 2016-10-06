@@ -76,12 +76,9 @@
   };
 
   MindMapDom.prototype.createElement = function (data) {
-    var $li = $('<li>').append('<a href="#">' + data.name + '</a>');
-    var appendElm = data.child.map(function (d) {
-      return this.createElement(d);
-    }, this);
-    $li.append(appendElm);
-    return $('<ul>').append($li);
+    // まず<li><a></a></li>の形を作る
+    // 次に<li>にcreateElement()したのもの配列をappendする
+    // 最後に<ul></ul>に作った<li>を追加する
   };
 
 
