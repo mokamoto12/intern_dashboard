@@ -24,12 +24,12 @@
     });
   };
 
-  MindMap.prototype.buildMindMapData = function (lists, name) {
-    var retObj = {name: name};
-    retObj.child = lists.find(function (listObj) {
-      return listObj.name === name;
+  MindMap.prototype.buildMindMapData = function (allLists, parentNode) {
+    var retObj = {name: parentNode};
+    retObj.child = allLists.find(function (listObj) {
+      return listObj.name === parentNode;
     }, this).cards.map(function (cardObj) {
-      return this.buildMindMapData(lists, cardObj.name);
+      return this.buildMindMapData(allLists, cardObj.name);
     }, this);
     return retObj;
   };
