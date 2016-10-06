@@ -11,16 +11,16 @@
 
 
   var MindMap = function (mindMapDom, trelloClient) {
-    this.mindMapDom = mindMapDom;
+    this.dom = mindMapDom;
     this.client = trelloClient;
   };
 
   MindMap.prototype.show = function () {
     var self = this;
-    this.mindMapDom.clearMindMap();
+    this.dom.clearMindMap();
     this.client.fetchLists().done(function (lists) {
       var mindMapData = self.buildMindMapData(lists, 'マインドマップ');
-      self.mindMapDom.displayMindMap(mindMapData);
+      self.dom.displayMindMap(mindMapData);
     });
   };
 
@@ -35,7 +35,7 @@
   };
 
   MindMap.prototype.addAddNodeFunction = function (textId, buttonId) {
-    this.mindMapDom.addAddNodeElement(textId, buttonId);
+    this.dom.addAddNodeElement(textId, buttonId);
     this.addAddNodeEvent(textId, buttonId);
   };
 
@@ -43,7 +43,7 @@
     var self = this;
     $('#' + buttonId).on('click', function () {
       self.client.fetchLists().done(function (lists) {
-        var activeNodeName = self.mindMapDom.getActiveNodeName();
+        var activeNodeName = self.dom.getActiveNodeName();
         var listId = self.client.findList(lists, activeNodeName).id;
         var nodeName = $('#' + textId).val();
         console.log(nodeName)
