@@ -46,10 +46,9 @@
         var activeNodeName = self.dom.getActiveNodeName();
         var listId = self.client.findList(lists, activeNodeName).id;
         var nodeName = $('#' + textId).val();
-        console.log(nodeName)
         self.client.postList(nodeName).done(function () {
           self.client.postCard(listId, nodeName).done(function () {
-            self.displayMindMap();
+            self.show();
           });
         });
       });
