@@ -4,7 +4,7 @@
     var trelloClient = new TrelloClient('sandbox_mindmap');
     var mindMapDom = new MindMapDom('body');
     var mindMap = new MindMap(mindMapDom, trelloClient);
-    mindMap.displayMindMap();
+    mindMap.show();
     mindMap.addAddNodeFunction('node_text', 'add_node');
   });
 
@@ -15,7 +15,7 @@
     this.client = trelloClient;
   };
 
-  MindMap.prototype.displayMindMap = function () {
+  MindMap.prototype.show = function () {
     var self = this;
     this.mindMapDom.clearMindMap();
     this.client.fetchLists().done(function (lists) {
