@@ -34,6 +34,9 @@
     return retObj;
   };
 
+
+
+
   MindMap.prototype.addAddNodeFunction = function (textId, buttonId) {
     this.dom.addAddNodeElement(textId, buttonId);
     this.addAddNodeEvent(textId, buttonId);
@@ -60,17 +63,18 @@
 
 
   var MindMapDom = function (selector) {
+    this.$mindmap = $(selector);
     this.selector = selector;
   };
 
-  MindMapDom.prototype.clearMindMap = function () {
-    $(this.selector + '>ul').remove();
-    $(this.selector + '>a').remove();
-    $(this.selector + '>svg').remove();
+  MindMapDom.prototype.displayMindMap = function (data) {
+    var self = this;
+    self.addMindMapElement(data);
+    self.libraryProcess();
   };
 
   MindMapDom.prototype.addMindMapElement = function (data) {
-    $(this.selector).append(this.createElement(data));
+    this.$mindmap.append(this.createElement(data));
   };
 
   MindMapDom.prototype.createElement = function (data) {
@@ -82,13 +86,11 @@
     return $('<ul>').append($li);
   };
 
-  MindMapDom.prototype.addAddNodeElement = function (textId, buttonId) {
-    this.addElement($('<input id="' + textId + '" type="text">'));
-    this.addElement($('<button id="' + buttonId + '">ノードを追加</button>'));
-  };
 
-  MindMapDom.prototype.addElement = function (elm) {
-    $(this.selector).append(elm);
+
+  MindMapDom.prototype.addAddNodeElement = function (textId, buttonId) {
+    this.$mindmap.append($('<input id="' + textId + '" type="text">'));
+    this.$mindmap.append($('<button id="' + buttonId + '">ノードを追加</button>'));
   };
 
   MindMapDom.prototype.getActiveNodeName = function () {
@@ -97,18 +99,22 @@
 
 
 
+  MindMapDom.prototype.clearMindMap = function () {
+    $(this.selector + '>ul').remove();
+    $(this.selector + '>a').remove();
+    $(this.selector + '>svg').remove();
+  };
 
-  MindMapDom.prototype.displayMindMap = function (data) {
+  MindMapDom.prototype.libraryProcess = function () {
     var self = this;
-    self.addMindMapElement(data);
-    $(self.selector).mindmap({
+    this.$mindmap.mindmap({
       showSublines: true,
       canvasError: "alert",
       mapArea: {x:-1, y:-1}
     });
 
     // add the data to the mindmap
-    var root = $(self.selector + '>ul>li').get(0).mynode = $(self.selector).addRootNode($(self.selector + '>ul>li>a').text(), {
+    var root = $(self.selector + '>ul>li').get(0).mynode = self.$mindmap.addRootNode($(self.selector + '>ul>li>a').text(), {
       href:'/',
       url:'/',
       onclick:function(node) {
@@ -123,7 +129,7 @@
       if (typeof(parentnode)=='undefined') parentnode=root;
       else parentnode=parentnode.mynode;
 
-      this.mynode = $(self.selector).addNode(parentnode, $('a:eq(0)',this).text(), {
+      this.mynode = self.$mindmap.addNode(parentnode, $('a:eq(0)',this).text(), {
 //          href:$('a:eq(0)',this).text().toLowerCase(),
         href:$('a:eq(0)',this).attr('href'),
         onclick:function(node) {
@@ -141,5 +147,5 @@
     $(self.selector + '>ul>li>ul').each(function() {
       $('>li', this).each(addLI);
     });
-  };
+  }
 }(jQuery));
