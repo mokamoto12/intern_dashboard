@@ -35,17 +35,16 @@ SearchWidget.prototype.addSearchFunction = function (eventSelector) {
 };
 
 SearchWidget.prototype.searchCard = function (list, word) {
-  var regexp = new RegExp(word);
   var self = this;
   list.cards = list.cards.filter(function (card) {
-    return self.isHitWord(card, regexp);
+    return self.isHitWord(card, word);
   });
   return list;
 };
 
-SearchWidget.prototype.isHitWord = function (card, regexp) {
-  return card.name.match(regexp) || card.desc.match(regexp) || card.labels.some(function (label) {
-      return label.name.match(regexp);
+SearchWidget.prototype.isHitWord = function (card, word) {
+  return card.name.match(word) || card.desc.match(word) || card.labels.some(function (label) {
+      return label.name.match(word);
     });
 };
 
