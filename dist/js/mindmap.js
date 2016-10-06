@@ -25,11 +25,11 @@
   };
 
   MindMap.prototype.buildMindMapData = function (allLists, parentNode) {
-    var retObj = {name: parentNode};
+    var retObj = {name: parentNode};                        // retObjにノードの名前をセットする
     retObj.child = allLists.find(function (listObj) {
-      return listObj.name === parentNode;
-    }, this).cards.map(function (cardObj) {
-      return this.buildMindMapData(allLists, cardObj.name);
+      return listObj.name === parentNode;                   // リスト一覧からノードのリストを取得し
+    }, this).cards.map(function (cardObj) {                 // その子ノード(list.cards)それぞれに対して
+      return this.buildMindMapData(allLists, cardObj.name); // buildMindMapDataを実行したものの配列をretObj.childに入れる
     }, this);
     return retObj;
   };
