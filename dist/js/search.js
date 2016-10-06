@@ -19,17 +19,35 @@ var SearchWidget = function (client, dom, sort) {
   this.sort = sort;
 };
 
-SearchWidget.prototype.addSearchFunction = function (onEventSelector) {
+SearchWidget.prototype.addSearchFunction = function (eventSelector) {
   var self = this;
-  $(onEventSelector).on('click', function () {
+  $(eventSelector).on('click', function () {
     self.sort.toggleActiveButton('#search_sort_list');
     self.dom.clearResult();
     self.client.fetchLists().done(function (lists) {
-      self.dom.addResult(lists);
+      var searchWord = self.dom.loadSearchWord();
+      var hitCards= lists.map(function (list) {
+        return self.searchCard(list, searchWord);
+      }, this);
+      self.dom.addResult(hitCards);
     });
   });
 };
 
+SearchWidget.prototype.searchCard = function (list, word) {
+  var regexp = new RegExp(word);
+  var self = this;
+  list.cards = list.cards.filter(function (card) {
+    return self.isHitWord(card, regexp);
+  });
+  return list;
+};
+
+SearchWidget.prototype.isHitWord = function (card, regexp) {
+  return card.name.match(regexp) || card.desc.match(regexp) || card.labels.some(function (label) {
+      return label.name.match(regexp);
+    });
+};
 
 
 
@@ -40,7 +58,7 @@ var SearchWidgetDom = function (searchWordSelector, searchResultSelector) {
 };
 
 SearchWidgetDom.prototype.addResult = function (lists) {
-  lists.map(function (list) {
+  lists.forEach(function (list) {
     this.$searchResultSelector.append(this.createListElm(list));
   }, this);
 };
@@ -68,19 +86,10 @@ SearchWidgetDom.prototype.createCardElm = function (card) {
 SearchWidgetDom.prototype.createListElm = function (list) {
   var self = this;
   var $list = $('<div data-list-id="' + list.id + '" class="search_result_list"><h3 class="search_list_name">' + list.name + '</h3></div>');
-  var regexp = new RegExp(this.loadSearchWord());
   list.cards.forEach(function (card) {
-    if (self.checkWordMatchInCard(card, regexp)) {
-      $list.append(self.createCardElm(card));
-    }
+    $list.append(self.createCardElm(card));
   });
   return $list;
-};
-
-SearchWidgetDom.prototype.checkWordMatchInCard = function (card, regexp) {
-  return card.name.match(regexp) || card.desc.match(regexp) || card.labels.some(function (label) {
-      return label.name.match(regexp);
-    });
 };
 
 
