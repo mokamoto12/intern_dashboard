@@ -37,11 +37,7 @@ BookmarkWidget.prototype.loadBookmarkTarget = function () {
 };
 
 BookmarkWidget.prototype.fetchTargetInfo = function () {
-  var d = $.Deferred();
-  $.getJSON('http://api.hitonobetsu.com/ogp/analysis?callback=?&url=' + this.bookmarkTarget, function (info) {
-    d.resolve(info);
-  });
-  return d.promise();
+  return $.getJSON('http://api.hitonobetsu.com/ogp/analysis?callback=?&url=' + this.bookmarkTarget)
 };
 
 BookmarkWidget.prototype.clickEvent = function () {
