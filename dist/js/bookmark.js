@@ -70,15 +70,8 @@ var BookmarkStore = function (client, listName) {
 };
 
 BookmarkStore.prototype.addBookmark = function (url, title, imageSrc) {
-  var self = this;
-  if (self.listId === null) {
-    this.client.fetchLists().done(function (lists) {
-      self.listId = self.client.findList(lists, self.listName).id;
-      self.client.postCard(self.listId, title, {desc: JSON.stringify({url: url, image: imageSrc})});
-    });
-    return;
-  }
-  self.client.postCard(self.listId, title, {desc: JSON.stringify({url: url, image: imageSrc})});
+  // Trelloにブックマークのカードを追加する
+  // titleをカードの名前、titleとimageSrcをカードの説明にJSON文字列として入れる
 };
 
 BookmarkStore.prototype.fetchAllBookmarks = function () {
