@@ -59,9 +59,7 @@ SearchWidgetDom.prototype.addResult = function (lists) {
 SearchWidgetDom.prototype.createListElm = function (list) {
   var self = this;
   var $list = $('<div data-list-id="' + list.id + '" class="search_result_list"><h3 class="search_list_name">' + list.name + '</h3></div>');
-  list.cards.forEach(function (card) {
-    $list.append(self.createCardElm(card));
-  });
+  // list.cardsそれぞれに対しcreateCardElm(card)を実行し$listにappendする
   return $list;
 };
 
