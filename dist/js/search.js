@@ -56,11 +56,13 @@ SearchWidgetDom.prototype.addResult = function (lists) {
   }, this);
 };
 
-SearchWidgetDom.prototype.clearResult = function () {
-  this.$searchResultSelector.empty();
-};
-SearchWidgetDom.prototype.loadSearchWord = function () {
-  return $(this.searchWordSelector).val();
+SearchWidgetDom.prototype.createListElm = function (list) {
+  var self = this;
+  var $list = $('<div data-list-id="' + list.id + '" class="search_result_list"><h3 class="search_list_name">' + list.name + '</h3></div>');
+  list.cards.forEach(function (card) {
+    $list.append(self.createCardElm(card));
+  });
+  return $list;
 };
 
 SearchWidgetDom.prototype.createCardElm = function (card) {
@@ -76,13 +78,11 @@ SearchWidgetDom.prototype.createCardElm = function (card) {
   return $link.append($card);
 };
 
-SearchWidgetDom.prototype.createListElm = function (list) {
-  var self = this;
-  var $list = $('<div data-list-id="' + list.id + '" class="search_result_list"><h3 class="search_list_name">' + list.name + '</h3></div>');
-  list.cards.forEach(function (card) {
-    $list.append(self.createCardElm(card));
-  });
-  return $list;
+SearchWidgetDom.prototype.clearResult = function () {
+  this.$searchResultSelector.empty();
+};
+SearchWidgetDom.prototype.loadSearchWord = function () {
+  return $(this.searchWordSelector).val();
 };
 
 
