@@ -66,13 +66,15 @@ SearchWidgetDom.prototype.createListElm = function (list) {
 SearchWidgetDom.prototype.createCardElm = function (card) {
   var $link = $('<a class="search_result_card" href="' + card.shortUrl + '" target="_blank"></a>');
   var $card = $('<div><p class="search_result_card_title">' + card.name + '</p></div>');
-  card.labels.forEach(function (label) {
-    $card.append($('<span class="search_label" data-label-id="' + label.id + '" style="background-color:' + label.color + '">' + label.name + '</span>'));
+  var $labels = card.labels.map(function (label) {
+    return $('<span class="search_label" data-label-id="' + label.id + '" style="background-color:' + label.color + '">' + label.name + '</span>');
   });
   if (card.due !== null) {
     var time = card.due.replace(/(\d{4})-(\d{2})-(\d{2}).*/, '$1/$2/$3');
-    $card.append($('<span class="search_due">' + time + '</span>'));
+    var $due = $('<span class="search_due">' + time + '</span>');
   }
+  $card.append($labels);
+  $card.append($due);
   return $link.append($card);
 };
 
