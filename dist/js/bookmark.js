@@ -18,11 +18,19 @@ var BookmarkWidget = function (store, bookmarkListName, submitSelector, targetSe
 BookmarkWidget.prototype.init = function () {
   var self = this;
   this.store.fetchAllBookmarks().done(function (bookmarks) {
-    bookmarks.forEach(function (bookmark) {
-      self.appendBookmarkElm(self.createBookmarkElement(bookmark.url, bookmark.title, bookmark.image));
-    });
+    // bookmarksそれぞれについてHTML要素を作成し追加する
   });
 };
+
+BookmarkWidget.prototype.createBookmarkElement = function (url, title, image) {
+  return $('<a href="' + url + '" target="_blank" class="bookmark_link"><img class="bookmark_favicon" src="' + image + '">' + title + '</a>');
+};
+
+BookmarkWidget.prototype.appendBookmarkElm = function (elm) {
+  $(this.listSelector).append(elm);
+};
+
+
 
 BookmarkWidget.prototype.addBookmarkFunction = function () {
   var self = this;
@@ -36,10 +44,6 @@ BookmarkWidget.prototype.loadBookmarkTarget = function () {
   return $(this.targetSelector).val();
 };
 
-BookmarkWidget.prototype.fetchTargetInfo = function () {
-  return $.getJSON('http://api.hitonobetsu.com/ogp/analysis?callback=?&url=' + this.bookmarkTarget)
-};
-
 BookmarkWidget.prototype.clickEvent = function () {
   var self = this;
   self.fetchTargetInfo().done(function (info) {
@@ -48,16 +52,12 @@ BookmarkWidget.prototype.clickEvent = function () {
   });
 };
 
-BookmarkWidget.prototype.createBookmarkElement = function (url, title, image) {
-  return $('<a href="' + url + '" target="_blank" class="bookmark_link"><img class="bookmark_favicon" src="' + image + '">' + title + '</a>');
+BookmarkWidget.prototype.fetchTargetInfo = function () {
+  return $.getJSON('http://api.hitonobetsu.com/ogp/analysis?callback=?&url=' + this.bookmarkTarget)
 };
 
 BookmarkWidget.prototype.createFaviconSrc = function () {
   return 'https://www.google.com/s2/favicons?domain=' + this.bookmarkTarget;
-};
-
-BookmarkWidget.prototype.appendBookmarkElm = function (elm) {
-  $(this.listSelector).append(elm);
 };
 
 
@@ -86,10 +86,9 @@ BookmarkStore.prototype.fetchAllBookmarks = function () {
   var items = [];
   var d = $.Deferred();
   this.client.fetchLists().done(function (lists) {
-    items = self.client.findList(lists, self.listName).cards.map(function (card) {
-      var json = JSON.parse(card.desc);
-      return {title: card.name, url:json.url, image:json.image};
-    });
+    items = ; // Trelloからリスト一覧を取得しその中からブックマークリストを見つける
+              // ブックマークリストのcardsそれぞれをブックマークのデータに加工する
+              // データの形式は {title: card.name, url: card.desc.url, image: card.desc.image};
     d.resolve(items);
   });
   return d.promise();
