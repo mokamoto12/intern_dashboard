@@ -172,7 +172,7 @@ SearchWidgetDom.prototype.createCardElm = function (card) {
     var time = card.due.replace(/(\d{4})-(\d{2})-(\d{2}).*/, '$1/$2/$3');
     var $due = $('<span class="search_due">' + time + '</span>');
   }
-  // カードを組み立ててreturnする
+  return $link.append($card.append($labels, $due));
 };
 
 SearchWidgetDom.prototype.createListElm = function (list) {
