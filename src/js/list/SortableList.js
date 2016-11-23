@@ -3,6 +3,16 @@ var SortableList = function (selector) {
   this.$list = $(selector);
 };
 
+SortableList.prototype.getAllItems = function () {
+  return $.map(this.$list.children(), function (item) {
+    return item.id;
+  });
+};
+
+SortableList.prototype.display = function (selector) {
+  this.$list.append($(selector));
+};
+
 SortableList.prototype.getSelector = function () {
   return this.selector;
 };
@@ -19,15 +29,5 @@ SortableList.prototype.update = function (callable) {
 
 SortableList.prototype.connect = function (sortableList) {
   this.$list.sortable("option", "connectWith", sortableList.getSelector());
-};
-
-SortableList.prototype.getAllItems = function () {
-  return $.map(this.$list.children(), function (item) {
-    return item.id;
-  });
-};
-
-SortableList.prototype.display = function (selector) {
-  this.$list.append($(selector));
 };
 

@@ -4,6 +4,8 @@
     var date = new Date();
     var timer = new Timer(date, '#time');
 
+    timer.updateTime();
+
     var leftStore = new Storage('leftStore');
     var leftList = new SortableList('#left_list');
 
@@ -12,11 +14,9 @@
 
     var widgetsList = new SortableList('#widgets_list');
 
-    timer.updateTime();
-
     widgetsList.getAllItems().forEach(function (item) {
       if (!leftStore.hasItem(item) && !rightStore.hasItem(item)) {
-        leftStore.pushNewItem(item);
+        leftStore.pushItem(item);
       }
     });
 
