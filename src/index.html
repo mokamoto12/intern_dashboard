@@ -2,69 +2,37 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+  <title>Trello Dashboard</title>
   <link rel="stylesheet" href="css/main.css">
-  <title>dashboard</title>
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
-  <script src="js/trelloClient.js"></script>
-  <script src="js/mindMapWidget.js"></script>
-  <script src="js/achievementRate.js"></script>
-  <script src="js/bookmark.js"></script>
-  <script src="js/search.js"></script>
-  <script src="js/registerTodo.js"></script>
-  <script src="js/app.js"></script>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+  <script src="js/timer/Timer.js"></script>
+  <script src="js/list/Storage.js"></script>
+  <script src="js/list/SortableList.js"></script>
+  <script src="js/Application.js"></script>
 </head>
 <body>
 <div class="wrap">
   <header class="">
     <h1 class="main_title">ダッシュボード</h1>
-    <p id="time" class="right_info"></p>
+    <p class="right_info">更新：<span id="time"></span></p>
   </header>
-  <div id="widgets">
-    <div id="bookmark" class="widget">
-      <h2>ブックマーク</h2>
-      <div id="bookmark_list" class="bookmark_list"></div>
-      <input type="text" id="bookmark_target">
-      <input type="submit" id="bookmark_submit">
+  <div id="widgets_list">
+    <div id="widget1" class="widget">
+      <h2>サンプル1</h2>
     </div>
-    <div id="achieve_rate" class="widget">
-      <h2>達成率</h2>
+    <div id="widget2" class="widget">
+      <h2>サンプル2</h2>
     </div>
-    <div id="search" class="widget">
-      <h2>検索</h2>
-      <div class="search_form">
-        <input type="text" id="search_word" class="search_text_box"><input type="submit" value="検索" id="search_submit" class="search_submit_btn">
-        <div class="search_btn_box">
-          <input id="search_sort_list" type="button" value="リスト順" class="search_sort_btn search_sort_btn_active"><input id="search_sort_label" type="button" value="ラベル順" class="search_sort_btn"><input id="search_sort_due" type="button" value="期限順" class="search_sort_btn">
-        </div>
-      </div>
-      <div id="search_result" class="search_result_box"></div>
+    <div id="widget3" class="widget">
+      <h2>サンプル3</h2>
     </div>
-    <div id="mind_map" class="widget">
-      <h2>マインドマップ</h2>
-    </div>
-    <div id="register_todo" class="widget">
-      <h2>TODO登録</h2>
-      <form action="#">
-        <p><label>
-            タイトル<input type="text" id="register_todo_title">
-        </label></p>
-        <p><label>
-          締め切り<input type="text" id="register_todo_due">
-        </label></p>
-        <p><label>
-          説明<textarea id="register_todo_desc"></textarea>
-        </label></p>
-        <p><label>
-          リスト<select id="register_todo_list_box"></select>
-        </label></p>
-        <input type="submit" id="register_todo_submit" value="登録ボタン">
-      </form>
+    <div id="widget4" class="widget">
+      <h2>サンプル4</h2>
     </div>
   </div>
-  <div id="left_column" class="col col_left"></div>
-  <div id="right_column" class="col col_right"></div>
+  <div id="left_list" class="col col_left"></div>
+  <div id="right_list" class="col col_right"></div>
 </div>
 </body>
 </html>
