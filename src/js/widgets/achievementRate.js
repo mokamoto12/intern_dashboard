@@ -1,13 +1,3 @@
-$(function () {
-  var trelloClient = new TrelloClient('Trello連携テスト');
-  var achieveRateWidget = new AchieveRateWidget(trelloClient, '#achieve_rate');
-  trelloClient.fetchLists().done(function (lists) {
-    achieveRateWidget.displayRate(achieveRateWidget.calcRate('done', lists));
-  });
-});
-
-
-
 var AchieveRateWidget = function (trelloClient, selector) {
   this.client = trelloClient;
   this.selector = selector;

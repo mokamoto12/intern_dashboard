@@ -1,10 +1,3 @@
-$(function () {
-  var mindMapBoardName = 'sandbox_mindmap';
-  var mindMapTrelloClient = new TrelloClient(mindMapBoardName);
-  var mindMapWidget = new MindMapWidget(mindMapTrelloClient, 'マインドマップ');
-  mindMapWidget.init();
-});
-
 var MindMapWidget = function (trelloClient, rootName) {
   this.client = trelloClient;
   this.rootName = rootName;

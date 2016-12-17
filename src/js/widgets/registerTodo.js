@@ -1,13 +1,3 @@
-$(function () {
-  //カレンダーで日付登録
-  var trelloClient = new TrelloClient('Trello連携テスト');
-  var registerTodo = new RegisterTodo(trelloClient, '#register_todo_submit', '#register_todo_list_box', '#register_todo_title', '#register_todo_desc', '#register_todo_due');
-
-  registerTodo.addDatePicker();
-  registerTodo.addListOptions();
-  registerTodo.addRegisterEvent();
-});
-
 var RegisterTodo = function (client, submitSelector, listBoxSelector, titleSelector, descSelector, dueSelector) {
   this.client = client;
   this.$submit = $(submitSelector);

@@ -1,14 +1,3 @@
-$(function () {
-  var trelloClient = new TrelloClient('Trello連携テスト');
-  var searchWidgetDom = new SearchWidgetDom('#search_word', '#search_result');
-  var searchWidgetSorter = new SearchWidgetSorter('#search_result', 'search_sort_btn_active', 'search_result_list', 'search_result_card', 'search_label', 'search_due');
-  var searchWidget = new SearchWidget(trelloClient, searchWidgetDom, searchWidgetSorter);
-  searchWidget.addSearchFunction();
-  searchWidgetSorter.addSortFunction('#search_sort_list', '#search_sort_label', '#search_sort_due');
-});
-
-
-
 var SearchWidgetSorter = function (resultSelector, activeBtnClass, resultListClass, resultCardClass, resultLabelClass, resultDueClass) {
   this.activeBtnClass= activeBtnClass;
   this.resultSlector = resultSelector;

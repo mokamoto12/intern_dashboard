@@ -1,11 +1,3 @@
-$(function () {
-  var trelloClient = new TrelloClient('Trello連携テスト');
-  var store = new BookmarkStore(trelloClient, 'ブックマーク');
-  var bookmarkWidget = new BookmarkWidget(store, 'ブックマーク', '#bookmark_submit', '#bookmark_target', '#bookmark_list');
-  bookmarkWidget.init();
-  bookmarkWidget.addBookmarkFunction();
-});
-
 var BookmarkWidget = function (store, bookmarkListName, submitSelector, targetSelector, listSelector) {
   this.store = store;
   this.listName = bookmarkListName;
